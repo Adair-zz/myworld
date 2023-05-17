@@ -73,7 +73,7 @@ const SideBar = () => {
         height: "100%",
       }}
     >
-      <Sidebar backgroundColor={colors.primary[400]} width="200px">
+      <Sidebar backgroundColor={colors.primary[400]} width={"200px"}>
         <Menu menuItemStyles={menuItemStyles}>
           <MenuItem
             icon={
