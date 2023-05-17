@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/scraping-data-mongodb.iml" filepath="$PROJECT_DIR$/.idea/scraping-data-mongodb.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/myworld.iml" filepath="$PROJECT_DIR$/.idea/myworld.iml" />
     </modules>
   </component>
 </project>
