@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-
-const credentials = require("./credentials");
+const credentials = require("../credentials");
 
 const uri =
   "mongodb+srv://" +
@@ -10,7 +9,7 @@ const uri =
   "@" +
   credentials.host +
   "/" +
-  credentials.database;
+  credentials.database.demo_trading;
 
 let connection = null;
 let model = null;

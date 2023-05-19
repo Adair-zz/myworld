@@ -16,11 +16,44 @@ def get_time():
     time = f"{hour}:{minute}:{second}"
     return {"date": date, "time": time}
 
-def initialize_demo_trading(mongo):
-    # mongo.create_collection("demo_trading")
-    mongo.get_collection("demo_trading")
+class StockMarket:
+    def __init__(self):
+        self.mongo = MongodbOperation()
+        self.mongo.connect_mongodb()
+        self.mongo.get_database("stock_market")
 
-    data = {"market": "NASDAQ",
+    def initialize_stock_market(self):
+        # mongo.create_collection("stock_market")
+        self.mongo.get_collection("stock_market")
+
+        data = {
+            "market": "NASDAQ",
+            "company_name": "Alibaba Group Holding Limited American Depositary Shares each representing eight Ordinary share",
+            "stock_symbol": "BABA",
+            "country": "China",
+            "IPO_year": 1999,
+            "volume": 10000000,
+            "sector": "Finance",
+            "industry": "Internet"
+        }
+
+        self.mongo.insert_document(data)
+        print("Stock Market: Success")
+        return None
+
+
+class DemoTrading:
+    def __init__(self):
+        self.mongo = MongodbOperation()
+        self.mongo.connect_mongodb()
+        self.mongo.get_database("demo_trading")
+
+    def initialize_demo_trading(self):
+        # mongo.create_collection("demo_trading")
+        self.mongo.get_collection("demo_trading")
+
+        data = {
+            "market": "NASDAQ",
             "company_name": "Alibaba Group Holding Limited American Depositary Shares each representing eight Ordinary share",
             "stock_symbol": "BABA",
             "transaction_type": "sell",
@@ -30,17 +63,18 @@ def initialize_demo_trading(mongo):
             "equity": 1010.25,
             "date": get_time()["date"],
             "time": get_time()["time"]
-            }
+        }
 
-    mongo.insert_document(data);
-    print("Demo Trading: Success")
-    return None
+        self.mongo.insert_document(data);
+        print("Demo Trading: Success")
+        return None
 
-def initialize_stock_holdings(mongo):
-    # mongo.create_collection("stock_holdings")
-    mongo.get_collection("stock_holdings")
+    def initialize_demo_holdings(self):
+        # self.mongo.create_collection("demo_holdings")
+        self.mongo.get_collection("demo_holdings")
 
-    data = {"market": "NASDAQ",
+        data = {
+            "market": "NASDAQ",
             "company_name": "Alibaba Group Holding Limited American Depositary Shares each representing eight Ordinary share",
             "stock_symbol": "BABA",
             "avg_cost_price": 10.10,
@@ -48,20 +82,12 @@ def initialize_stock_holdings(mongo):
             "total_cost_price": 100.35,
             "equity": 1010.25,
             "latest_closing_price": 10.25,
-            "return": -10.23,
-            }
+        }
 
-    mongo.insert_document(data)
-    print("Stock Holdings: Success")
-    return None
-
-def currentStock():
-    return None
+        self.mongo.insert_document(data)
+        print("Stock Holdings: Success")
+        return None
 
 if __name__ == '__main__':
-    mongo = MongodbOperation()
-    mongo.connect_mongodb()
-    mongo.get_database("myworld")
-
-    initialize_demo_trading(mongo)
-    # initialize_stock_holdings(mongo)
+    stockMarket = StockMarket()
+    stockMarket.initialize_stock_market()
