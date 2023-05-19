@@ -1,17 +1,23 @@
 from pymongo.mongo_client import MongoClient
+import os
 import configparser
 
 
 class MongodbOperation:
     def __init__(self):
         self.config = configparser.ConfigParser()
-        self.config.read("config.ini")
+        self.config.read(self.config_abs_path())
         self.username = self.config.get("Credentials", "username")
         self.password = self.config.get("Credentials", "password")
         self.uri = f"mongodb+srv://{self.username}:{self.password}@cluster0.ueqfnze.mongodb.net/"
         self.client = None
         self.database = None
         self.collection = None
+
+    def config_abs_path(self):
+        config_dir = os.path.dirname(os.path.abspath("D:\\Repository\\myworld\\scraping-data-mongodb\\config.ini"))
+        config_path = os.path.join(config_dir, "config.ini")
+        return config_path
 
     def connect_mongodb(self):
         try:

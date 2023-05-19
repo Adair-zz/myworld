@@ -19,6 +19,14 @@ let Schema = mongoose.Schema;
 
 let demoTradingSchema = new Schema(
   {
+    market: {
+      type: String,
+      required: true,
+    },
+    company_name: {
+      type: String,
+      required: true,
+    },
     stock_symbol: {
       type: String,
       required: true,
@@ -27,7 +35,7 @@ let demoTradingSchema = new Schema(
       type: String,
       required: true,
     },
-    price: {
+    stock_value: {
       type: Number,
       required: true,
     },
@@ -35,11 +43,11 @@ let demoTradingSchema = new Schema(
       type: Number,
       required: true,
     },
-    brokerage_fees: {
+    brokerage_fee: {
       type: Number,
       required: true,
     },
-    total_amount: {
+    equity: {
       type: Number,
       required: true,
     },
@@ -48,10 +56,6 @@ let demoTradingSchema = new Schema(
       required: true,
     },
     time: {
-      type: String,
-      required: true,
-    },
-    market: {
       type: String,
       required: true,
     },

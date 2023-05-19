@@ -8,7 +8,12 @@ const Balance = () => {
       justifyContent={"space-between"}
       alignItems={"center"}
     >
-      <Header title={"BALANCE"} subtitle={"Account Balance"} />
+      <Header
+        title={"BALANCE"}
+        subtitle={"Account Balance"}
+        titleVariant="h3"
+        subtitleVariant="h6"
+      />
     </Box>
   );
 };

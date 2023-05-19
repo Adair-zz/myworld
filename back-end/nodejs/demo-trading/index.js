@@ -1,23 +1,40 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
+
 const DemoTradingDB = require("./demo-tradingDB");
 const DemoTrading = DemoTradingDB.getModel();
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
 
 app.post("/demo-order", async (req, res) => {
   try {
+    const {
+      market,
+      company_name,
+      stock_symbol,
+      transaction_type,
+      stock_value,
+      quantity,
+      brokerage_fee,
+      equity,
+      date,
+      time,
+    } = req.body;
+
     const newDemoOrder = new DemoTrading({
-      stock_symbol: req.body.stock_symbol,
-      transaction_type: req.body.transaction_type,
-      price: req.body.price,
-      quantity: req.body.quantity,
-      brokerage_fees: req.body.brokerage_fees,
-      total_amount: req.body.total_amount,
-      date: req.body.date,
-      time: req.body.time,
-      market: req.body.market,
+      market: market,
+      company_name: company_name,
+      stock_symbol: stock_symbol,
+      transaction_type: transaction_type,
+      stock_value: stock_value,
+      quantity: quantity,
+      brokerage_fees: brokerage_fee,
+      total_amount: equity,
+      date: date,
+      time: time,
     });
 
     await newDemoOrder.save();
@@ -27,7 +44,7 @@ app.post("/demo-order", async (req, res) => {
   }
 });
 
-app.get("/demo-trades", async (req, res) => {
+app.get("/demo-transaction", async (req, res) => {
   try {
     const demoTrades = await DemoTrading.find();
 
