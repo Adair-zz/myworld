@@ -1,7 +1,22 @@
 const DemoTradingDB = require("../database/demo-tradingDB");
-const DemoTrading = DemoTradingDB.getModel();
+const DemoTrading = DemoTradingDB.getDemoTransactionsModel();
+const DemoHoldings = DemoTradingDB.getDemoHoldingsModel();
 
-const demoOrder = async (req, res) => {
+const demoHoldings = async (req, res) => {
+  try {
+    const demoHoldings = await DemoHoldings.find();
+
+    if (demoHoldings.length === 0) {
+      res.status(200).json({ data: null });
+    } else {
+      res.status(200).json(demoHoldings);
+    }
+  } catch (error) {
+    res.status(500).json({ status: 500, error: error });
+  }
+};
+
+const demoOrders = async (req, res) => {
   try {
     const {
       market,
@@ -36,7 +51,7 @@ const demoOrder = async (req, res) => {
   }
 };
 
-const demoTransaction = async (req, res) => {
+const demoTransactions = async (req, res) => {
   try {
     const demoTrades = await DemoTrading.find();
 
@@ -51,6 +66,7 @@ const demoTransaction = async (req, res) => {
 };
 
 module.exports = {
-  demoOrder,
-  demoTransaction,
+  demoHoldings,
+  demoOrders,
+  demoTransactions,
 };

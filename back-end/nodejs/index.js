@@ -8,8 +8,9 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-app.post("/demo-order", demoTrading.demoOrder);
-app.get("/demo-transaction", demoTrading.demoTransaction);
+app.get("/demo-holdings", demoTrading.demoHoldings);
+app.post("/demo-orders", demoTrading.demoOrders);
+app.get("/demo-transactions", demoTrading.demoTransactions);
 
 app.listen(8080, () => {
   console.log("Listening on 8080");

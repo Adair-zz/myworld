@@ -1,9 +1,21 @@
-import { useState, useEffect } from "react";
 import { Box, useTheme } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import axios from "axios";
 import { tokens } from "../../theme";
 import Header from "../header";
+
+interface TransactionType {
+  brokerage_fee: number;
+  company_name: string;
+  date: string;
+  equity: number;
+  market: string;
+  quantity: number;
+  stock_symbol: string;
+  stock_value: number;
+  time: string;
+  transaction_type: string;
+  _id: string;
+}
 
 const columns = [
   // { field: "_id", headerName: "ID" },
@@ -13,27 +25,15 @@ const columns = [
   { field: "transaction_type", headerName: "Type", flex: 0.5 },
   { field: "stock_value", headerName: "Price", flex: 0.6 },
   { field: "quantity", headerName: "Quantity", flex: 0.6 },
-  { field: "brokerage_fees", headerName: "Fees", flex: 0.5 },
+  { field: "brokerage_fee", headerName: "Fees", flex: 0.5 },
   { field: "equity", headerName: "Equity", flex: 0.7 },
   { field: "date", headerName: "Date", flex: 0.7 },
   { field: "time", headerName: "Time", flex: 0.7 },
 ];
 
-const Transaction = () => {
+const Transaction = ({ transactions }: { transactions: TransactionType[] }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [transactions, setTransactions] = useState(null);
-
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      const response = await axios.get(
-        "http://localhost:8080/demo-transaction"
-      );
-      console.log(response.data);
-      setTransactions(response.data);
-    };
-    fetchTransactions();
-  }, []);
 
   return (
     <Box m={"5px 5px 0 5px"}>
