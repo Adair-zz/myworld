@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux/es/hooks/useSelector";
+import { RootState } from "../../store/store";
 import {
   Box,
   ButtonGroup,
@@ -8,14 +10,22 @@ import {
   Autocomplete,
   TextField,
 } from "@mui/material";
+
 import { tokens } from "../../theme";
+import { statusChange } from "../../store/order/stockSelectSlice";
 
 const TradeTicket = () => {
   const theme = useTheme();
+  const dispatch = useDispatch();
+
   const colors = tokens(theme.palette.mode);
-  const [tradeType, setTradeType] = useState("buy");
+  const selectedstock = useSelector((state: RootState) => state.stockSelect);
 
   const options = [
+    "",
+    "NASDAQ",
+    "BABA",
+    "Alibaba Group Holding Limited American Depositary Shares each representing eight Ordinary share",
     "OptionOptionOptionOptionOptionOptionOption 1",
     "ption 2",
     "tion 3",
@@ -33,7 +43,7 @@ const TradeTicket = () => {
               width: "50%",
               backgroundColor: colors.greenAccent[700],
             }}
-            onClick={() => setTradeType("buy")}
+            onClick={() => dispatch(statusChange("buy"))}
             size={"small"}
           >
             Buy
@@ -41,7 +51,7 @@ const TradeTicket = () => {
           <Button
             variant="contained"
             sx={{ width: "50%", backgroundColor: colors.redAccent[700] }}
-            onClick={() => setTradeType("sell")}
+            onClick={() => dispatch(statusChange("sell"))}
             size={"small"}
           >
             Sell
@@ -49,7 +59,7 @@ const TradeTicket = () => {
         </ButtonGroup>
       </Box>
 
-      {tradeType === "buy" && (
+      {selectedstock.status === "buy" && (
         <Box m={"20px 5px 0 5px"}>
           <Box
             display={"flex"}
@@ -59,6 +69,7 @@ const TradeTicket = () => {
             m={"0 0 15px 0"}
           >
             <Autocomplete
+              value={selectedstock.market}
               options={options}
               filterSelectedOptions
               renderInput={(params) => (
@@ -68,6 +79,7 @@ const TradeTicket = () => {
             />
 
             <Autocomplete
+              value={selectedstock.stock_symbol}
               options={options}
               filterSelectedOptions
               renderInput={(params) => (
@@ -85,6 +97,7 @@ const TradeTicket = () => {
             gap={"10%"}
           >
             <Autocomplete
+              value={selectedstock.company_name}
               options={options}
               filterSelectedOptions
               renderInput={(params) => (
@@ -163,7 +176,7 @@ const TradeTicket = () => {
         </Box>
       )}
 
-      {tradeType === "sell" && (
+      {selectedstock.status === "sell" && (
         <Box m={"20px 5px 0 5px"}>
           <Box
             display={"flex"}
@@ -173,6 +186,7 @@ const TradeTicket = () => {
             m={"0 0 15px 0"}
           >
             <Autocomplete
+              value={selectedstock.market}
               options={options}
               filterSelectedOptions
               renderInput={(params) => (
@@ -182,6 +196,7 @@ const TradeTicket = () => {
             />
 
             <Autocomplete
+              value={selectedstock.stock_symbol}
               options={options}
               filterSelectedOptions
               renderInput={(params) => (
@@ -199,6 +214,7 @@ const TradeTicket = () => {
             gap={"10%"}
           >
             <Autocomplete
+              value={selectedstock.company_name}
               options={options}
               filterSelectedOptions
               renderInput={(params) => (

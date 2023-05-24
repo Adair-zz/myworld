@@ -3,20 +3,29 @@ import axios from "axios";
 import { Box, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/header";
+import Holding from "../../components/holdidng";
 import TradeTicket from "../../components/trade-ticket";
 import Transaction from "../../components/transaction";
 
 const DemoTrading = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [holdings, setHoldings] = useState(null);
   const [transactions, setTransactions] = useState(null);
+
+  useEffect(() => {
+    const fetchHoldings = async () => {
+      const response = await axios.get("http://localhost:8080/demo-holdings");
+      setHoldings(response.data);
+    };
+    fetchHoldings();
+  }, []);
 
   useEffect(() => {
     const fetchTransactions = async () => {
       const response = await axios.get(
-        "http://localhost:8080/demo-transaction"
+        "http://localhost:8080/demo-transactions"
       );
-      console.log(response.data);
       setTransactions(response.data);
     };
     fetchTransactions();
@@ -49,13 +58,16 @@ const DemoTrading = () => {
             backgroundColor: colors.primary[400],
             margin: "0 5px 5px 0",
           }}
-        ></Box>
+          overflow={"auto"}
+        >
+          {holdings != null && <Holding holdings={holdings} />}
+        </Box>
         <Box
           gridColumn={"span 4"}
           gridRow={"span 4"}
           sx={{ backgroundColor: colors.primary[400] }}
-          overflow={"auto"}
           m={"0 0 5px 0"}
+          overflow={"auto"}
         >
           <TradeTicket />
         </Box>

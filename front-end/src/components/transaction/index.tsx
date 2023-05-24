@@ -4,17 +4,17 @@ import { tokens } from "../../theme";
 import Header from "../header";
 
 interface TransactionType {
-  brokerage_fee: number;
-  company_name: string;
-  date: string;
-  equity: number;
-  market: string;
-  quantity: number;
-  stock_symbol: string;
-  stock_value: number;
-  time: string;
-  transaction_type: string;
   _id: string;
+  market: string;
+  company_name: string;
+  stock_symbol: string;
+  transaction_type: string;
+  stock_value: number;
+  quantity: number;
+  brokerage_fee: number;
+  equity: number;
+  date: string;
+  time: string;
 }
 
 const columns = [
@@ -25,7 +25,7 @@ const columns = [
   { field: "transaction_type", headerName: "Type", flex: 0.5 },
   { field: "stock_value", headerName: "Price", flex: 0.6 },
   { field: "quantity", headerName: "Quantity", flex: 0.6 },
-  { field: "brokerage_fee", headerName: "Fees", flex: 0.5 },
+  { field: "brokerage_fee", headerName: "Fees", flex: 0.6 },
   { field: "equity", headerName: "Equity", flex: 0.7 },
   { field: "date", headerName: "Date", flex: 0.7 },
   { field: "time", headerName: "Time", flex: 0.7 },
