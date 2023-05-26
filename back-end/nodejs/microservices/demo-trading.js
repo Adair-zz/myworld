@@ -5,12 +5,7 @@ const DemoHoldings = DemoTradingDB.getDemoHoldingsModel();
 const demoHoldings = async (req, res) => {
   try {
     const demoHoldings = await DemoHoldings.find();
-
-    if (demoHoldings.length === 0) {
-      res.status(200).json({ data: null });
-    } else {
-      res.status(200).json(demoHoldings);
-    }
+    res.status(200).json(demoHoldings);
   } catch (error) {
     res.status(500).json({ status: 500, error: error });
   }
@@ -45,7 +40,7 @@ const demoOrders = async (req, res) => {
     });
 
     await newDemoOrder.save();
-    res.status(201).json({ status: 201 });
+    res.status(201);
   } catch (error) {
     res.status(500).json({ status: 500, error: error });
   }
@@ -54,12 +49,7 @@ const demoOrders = async (req, res) => {
 const demoTransactions = async (req, res) => {
   try {
     const demoTrades = await DemoTrading.find();
-
-    if (demoTrades.length === 0) {
-      res.status(200).json({ data: null });
-    } else {
-      res.status(200).json(demoTrades);
-    }
+    res.status(200).json(demoTrades);
   } catch (error) {
     res.status(500).json({ status: 500, error: error });
   }
