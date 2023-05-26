@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 
 import { tokens } from "../../theme";
-import { statusChange } from "../../store/order/stockSelectSlice";
+import { statusChange } from "../../store/stockSelectSlice";
 
 const TradeTicket = () => {
   const theme = useTheme();

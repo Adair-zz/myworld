@@ -4,21 +4,10 @@ import { useDispatch } from "react-redux";
 
 import { tokens } from "../../theme";
 import Header from "../header";
-import { stockSelect } from "../../store/order/stockSelectSlice";
+import { stockSelect } from "../../store/stockSelectSlice";
+import { StockHoldingsType } from "../../utils/interface";
 
-interface HoldingType {
-  _id: string;
-  market: string;
-  company_name: string;
-  stock_symbol: string;
-  avg_cost_price: number;
-  quantity: number;
-  total_cost_price: number;
-  equity: number;
-  latest_closing_price: number;
-}
-
-const Holding = ({ holdings }: { holdings: HoldingType[] }) => {
+const Holding = ({ holdings }: { holdings: StockHoldingsType[] }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -34,7 +23,7 @@ const Holding = ({ holdings }: { holdings: HoldingType[] }) => {
     {
       field: "_id",
       headerName: "",
-      renderCell: ({ row }: { row: HoldingType }) => {
+      renderCell: ({ row }: { row: StockHoldingsType }) => {
         const stockInfo = {
           market: row.market,
           company_name: row.company_name,

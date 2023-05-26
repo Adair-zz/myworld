@@ -5,9 +5,9 @@ import { ColorModeContext, useMode } from "./theme";
 import Navigation from "./scences/global/Navigation";
 import Dashboard from "./scences/dashboard";
 import Stock from "./scences/stock";
-import StockNews from "./scences/stock-news";
+import StockNews from "./scences/stockNews";
 import Balance from "./scences/balance";
-import DemoTrading from "./scences/demo-trading";
+import DemoTrading from "./scences/demoTrading";
 
 const router = createBrowserRouter([
   {

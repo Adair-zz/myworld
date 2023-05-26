@@ -4,7 +4,7 @@ import { Box, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import Header from "../../components/header";
 import Holding from "../../components/holdidng";
-import TradeTicket from "../../components/trade-ticket";
+import TradeTicket from "../../components/tradeTicket";
 import Transaction from "../../components/transaction";
 
 const DemoTrading = () => {
@@ -25,7 +25,7 @@ const DemoTrading = () => {
     const fetchTransactions = async () => {
       const response = await axios.get(
         "http://localhost:8080/demo-transactions"
-      );
+      );  
       setTransactions(response.data);
     };
     fetchTransactions();

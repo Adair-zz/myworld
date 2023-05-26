@@ -9,7 +9,7 @@ const initialState: SelectedStockType = {
 };
 
 const stockSelectSlice = createSlice({
-  name: "selectedStock",
+  name: "StockSelect",
   initialState,
   reducers: {
     stockSelect: {
