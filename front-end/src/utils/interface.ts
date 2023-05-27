@@ -6,6 +6,7 @@ export interface SelectedStockType {
   stock_symbol: string;
 }
 
+// for stockHoldingsSlice
 export interface StockHoldingsType {
   _id: string;
   market: string;
@@ -19,6 +20,26 @@ export interface StockHoldingsType {
 }
 
 export interface StockHoldingsSlice {
-  demo_holdings: StockHoldingsType;
-  live_holdings: StockHoldingsType;
+  demo_holdings: StockHoldingsType[];
+  live_holdings: StockHoldingsType[];
+}
+
+// for stockTransactionsSlice
+export interface stockTransactionsType {
+  _id: string;
+  market: string;
+  company_name: string;
+  stock_symbol: string;
+  transaction_type: string;
+  stock_value: number | undefined;
+  quantity: number | undefined;
+  brokerage_fee: number | undefined;
+  equity: number | undefined;
+  date: string;
+  time: string;
+}
+
+export interface stockTransactionsSlice {
+  demo_transactions: stockTransactionsType[];
+  live_transactions: stockTransactionsType[];
 }

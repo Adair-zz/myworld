@@ -1,21 +1,9 @@
 import { Box, useTheme } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { tokens } from "../../theme";
-import Header from "../header";
 
-interface TransactionType {
-  _id: string;
-  market: string;
-  company_name: string;
-  stock_symbol: string;
-  transaction_type: string;
-  stock_value: number;
-  quantity: number;
-  brokerage_fee: number;
-  equity: number;
-  date: string;
-  time: string;
-}
+import { tokens } from "../../theme";
+import { stockTransactionsType } from "../../utils/interface";
+import Header from "../header";
 
 const columns = [
   // { field: "_id", headerName: "ID" },
@@ -31,7 +19,11 @@ const columns = [
   { field: "time", headerName: "Time", flex: 0.7 },
 ];
 
-const Transaction = ({ transactions }: { transactions: TransactionType[] }) => {
+const Transaction = ({
+  transactions,
+}: {
+  transactions: stockTransactionsType[];
+}) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 

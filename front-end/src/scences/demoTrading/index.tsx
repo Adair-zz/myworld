@@ -1,7 +1,11 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Box, Typography, useTheme } from "@mui/material";
+
 import { tokens } from "../../theme";
+import { RootState, AppDispatch } from "../../store/store";
+import { fetchDemoHoldings } from "../../store/stockHoldingsSlice";
+import { fetchDemoTransactions } from "../../store/stockTransactionsSlice";
 import Header from "../../components/header";
 import Holding from "../../components/holdidng";
 import TradeTicket from "../../components/tradeTicket";
@@ -9,27 +13,20 @@ import Transaction from "../../components/transaction";
 
 const DemoTrading = () => {
   const theme = useTheme();
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(fetchDemoHoldings());
+    dispatch(fetchDemoTransactions());
+  }, []);
+
   const colors = tokens(theme.palette.mode);
-  const [holdings, setHoldings] = useState(null);
-  const [transactions, setTransactions] = useState(null);
-
-  useEffect(() => {
-    const fetchHoldings = async () => {
-      const response = await axios.get("http://localhost:8080/demo-holdings");
-      setHoldings(response.data);
-    };
-    fetchHoldings();
-  }, []);
-
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      const response = await axios.get(
-        "http://localhost:8080/demo-transactions"
-      );  
-      setTransactions(response.data);
-    };
-    fetchTransactions();
-  }, []);
+  const demoHoldings = useSelector(
+    (state: RootState) => state.stockHoldings.demo_holdings
+  );
+  const demoTransactions = useSelector(
+    (state: RootState) => state.stockTransactions.demo_transactions
+  );
 
   return (
     <Box m={"0 10px 0 10px"}>
@@ -60,7 +57,7 @@ const DemoTrading = () => {
           }}
           overflow={"auto"}
         >
-          {holdings != null && <Holding holdings={holdings} />}
+          <Holding holdings={demoHoldings} />
         </Box>
         <Box
           gridColumn={"span 4"}
@@ -77,7 +74,7 @@ const DemoTrading = () => {
           sx={{ backgroundColor: colors.primary[400], margin: "0 5px 0 0" }}
           overflow={"auto"}
         >
-          {transactions != null && <Transaction transactions={transactions} />}
+          <Transaction transactions={demoTransactions} />
         </Box>
         <Box
           gridColumn={"span 4"}

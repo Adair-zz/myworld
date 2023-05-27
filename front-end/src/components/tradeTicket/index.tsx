@@ -1,6 +1,4 @@
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux/es/hooks/useSelector";
-import { RootState } from "../../store/store";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Box,
   ButtonGroup,
@@ -12,6 +10,7 @@ import {
 } from "@mui/material";
 
 import { tokens } from "../../theme";
+import { RootState } from "../../store/store";
 import { statusChange } from "../../store/stockSelectSlice";
 
 const TradeTicket = () => {
@@ -170,7 +169,7 @@ const TradeTicket = () => {
                 borderRadius: "15px",
               }}
             >
-              Buy BABA
+              Buy {selectedstock.stock_symbol}
             </Button>
           </Box>
         </Box>
@@ -287,7 +286,7 @@ const TradeTicket = () => {
                 borderRadius: "15px",
               }}
             >
-              Sell BABA
+              Sell {selectedstock.stock_symbol}
             </Button>
           </Box>
         </Box>
