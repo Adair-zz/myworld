@@ -1,3 +1,16 @@
+// for stockMarket
+export interface StockMarketType {
+  _id: string;
+  market: string;
+  company_name: string;
+  stock_symbol: string;
+  country: string;
+  IPO_year: number | undefined;
+  volume: number | undefined;
+  sector: string;
+  industry: string;
+}
+
 // for stockSelectSlice
 export interface SelectedStockType {
   status: string;
@@ -25,7 +38,7 @@ export interface StockHoldingsSlice {
 }
 
 // for stockTransactionsSlice
-export interface stockTransactionsType {
+export interface StockTransactionsType {
   _id: string;
   market: string;
   company_name: string;
@@ -39,7 +52,7 @@ export interface stockTransactionsType {
   time: string;
 }
 
-export interface stockTransactionsSlice {
-  demo_transactions: stockTransactionsType[];
-  live_transactions: stockTransactionsType[];
+export interface StockTransactionsSlice {
+  demo_transactions: StockTransactionsType[];
+  live_transactions: StockTransactionsType[];
 }

@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import {
-  stockTransactionsSlice,
-  stockTransactionsType,
-} from "../../utils/interface";
 import axios from "axios";
+import {
+  StockTransactionsSlice,
+  StockTransactionsType,
+} from "../../utils/interface";
 
-const initialState: stockTransactionsSlice = {
+const initialState: StockTransactionsSlice = {
   demo_transactions: [
     {
       _id: "",
@@ -52,12 +52,12 @@ const stockTransactions = createSlice({
   reducers: {
     demoTransactions: {
       reducer(
-        state: stockTransactionsSlice,
-        action: PayloadAction<stockTransactionsType[]>
+        state: StockTransactionsSlice,
+        action: PayloadAction<StockTransactionsType[]>
       ) {
         state.demo_transactions = action.payload;
       },
-      prepare(demoTransactions: stockTransactionsType[]) {
+      prepare(demoTransactions: StockTransactionsType[]) {
         return {
           payload: demoTransactions,
         };
@@ -65,12 +65,12 @@ const stockTransactions = createSlice({
     },
     liveTransactions: {
       reducer(
-        state: stockTransactionsSlice,
-        action: PayloadAction<stockTransactionsType[]>
+        state: StockTransactionsSlice,
+        action: PayloadAction<StockTransactionsType[]>
       ) {
         state.live_transactions = action.payload;
       },
-      prepare(liveTransactions: stockTransactionsType[]) {
+      prepare(liveTransactions: StockTransactionsType[]) {
         return {
           payload: liveTransactions,
         };
@@ -81,11 +81,10 @@ const stockTransactions = createSlice({
     builder.addCase(
       fetchDemoTransactions.fulfilled,
       (
-        state: stockTransactionsSlice,
-        action: PayloadAction<stockTransactionsType[]>
+        state: StockTransactionsSlice,
+        action: PayloadAction<StockTransactionsType[]>
       ) => {
-        const demoTransactions = action.payload;
-        state.demo_transactions = demoTransactions;
+        state.demo_transactions = action.payload;
       }
     );
   },

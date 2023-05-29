@@ -1,14 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
-import stockSelectedSlice from "./stockSelectSlice";
+import stockMarketSlice from "./stockMarketSlice";
 import stockHoldingsSlice from "./stockHoldingsSlice";
 import stockTransactionsSlice from "./stockTransactionsSlice";
+import stockSelectedSlice from "./stockSelectSlice";
 
 const store = configureStore({
   reducer: {
-    stockSelect: stockSelectedSlice,
+    stockMarket: stockMarketSlice,
     stockHoldings: stockHoldingsSlice,
     stockTransactions: stockTransactionsSlice,
+    stockSelect: stockSelectedSlice,
   },
 });
 

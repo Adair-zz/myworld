@@ -2,7 +2,7 @@ import { Box, useTheme } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 
 import { tokens } from "../../theme";
-import { stockTransactionsType } from "../../utils/interface";
+import { StockTransactionsType } from "../../utils/interface";
 import Header from "../header";
 
 const columns = [
@@ -22,7 +22,7 @@ const columns = [
 const Transaction = ({
   transactions,
 }: {
-  transactions: stockTransactionsType[];
+  transactions: StockTransactionsType[];
 }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);

@@ -1,3 +1,4 @@
+import { useEffect, ChangeEvent } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Box,
@@ -10,15 +11,50 @@ import {
 } from "@mui/material";
 
 import { tokens } from "../../theme";
-import { RootState } from "../../store/store";
+import { AppDispatch, RootState } from "../../store/store";
+import { StockMarketType } from "../../utils/interface";
+import { fetchStockMarket } from "../../store/stockMarketSlice";
 import { statusChange } from "../../store/stockSelectSlice";
+
+const optionsProcess = (stockMarket: StockMarketType[]) => {
+  const stockMarketOptions: string[] = [];
+  const stockCompanyNameOptions: string[] = [];
+  const stockSymbolOptions: string[] = [];
+  stockMarket.map((stock) => {
+    const { market, company_name, stock_symbol } = stock;
+    if (!stockMarketOptions.includes(market)) {
+      stockMarketOptions.push(market);
+    }
+    stockCompanyNameOptions.push(company_name);
+    stockSymbolOptions.push(stock_symbol);
+  });
+  return { stockMarketOptions, stockCompanyNameOptions, stockSymbolOptions };
+};
 
 const TradeTicket = () => {
   const theme = useTheme();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(fetchStockMarket());
+  }, []);
 
   const colors = tokens(theme.palette.mode);
+  const stockMarket = useSelector((state: RootState) => state.stockMarket);
   const selectedstock = useSelector((state: RootState) => state.stockSelect);
+  const { stockMarketOptions, stockCompanyNameOptions, stockSymbolOptions } =
+    optionsProcess(stockMarket);
+
+  console.log(stockSymbolOptions);
+
+  const handleSelectedStockChange = (
+    event: ChangeEvent<{}>,
+    newValue: string | "" | null,
+    type: string
+  ) => {
+    console.log(type);
+    console.log(newValue);
+  };
 
   const options = [
     "",
@@ -69,8 +105,14 @@ const TradeTicket = () => {
           >
             <Autocomplete
               value={selectedstock.market}
-              options={options}
+              options={stockMarketOptions}
               filterSelectedOptions
+              onChange={(
+                event: ChangeEvent<{}>,
+                newValue: string | "" | null
+              ) => {
+                handleSelectedStockChange(event, newValue, "market");
+              }}
               renderInput={(params) => (
                 <TextField {...params} label="Market" variant="standard" />
               )}
@@ -79,8 +121,14 @@ const TradeTicket = () => {
 
             <Autocomplete
               value={selectedstock.stock_symbol}
-              options={options}
+              options={stockSymbolOptions}
               filterSelectedOptions
+              onChange={(
+                event: ChangeEvent<{}>,
+                newValue: string | "" | null
+              ) => {
+                handleSelectedStockChange(event, newValue, "stock_symbol");
+              }}
               renderInput={(params) => (
                 <TextField {...params} label="Symbol" variant="standard" />
               )}
@@ -97,8 +145,14 @@ const TradeTicket = () => {
           >
             <Autocomplete
               value={selectedstock.company_name}
-              options={options}
+              options={stockCompanyNameOptions}
               filterSelectedOptions
+              onChange={(
+                event: ChangeEvent<{}>,
+                newValue: string | "" | null
+              ) => {
+                handleSelectedStockChange(event, newValue, "company_name");
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -111,7 +165,7 @@ const TradeTicket = () => {
 
             <Autocomplete
               options={options}
-              disabled
+              // disabled
               defaultValue={"ption 2"}
               renderInput={(params) => (
                 <TextField {...params} label="Stock Value" variant="standard" />
@@ -228,7 +282,7 @@ const TradeTicket = () => {
 
             <Autocomplete
               options={options}
-              disabled
+              // disabled
               defaultValue={"ption 2"}
               renderInput={(params) => (
                 <TextField {...params} label="Stock Value" variant="standard" />
