@@ -52,8 +52,18 @@ const TradeTicket = () => {
     newValue: string | "" | null,
     type: string
   ) => {
-    console.log(type);
-    console.log(newValue);
+    switch (type) {
+      case "market":
+        console.log("market");
+        break;
+      case "company_name":
+        console.log("com");
+        break;
+      case "stock_symbol":
+        console.log("hi, symbol");
+        console.log("hi");
+        break;
+    }
   };
 
   const options = [

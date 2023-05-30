@@ -13,6 +13,14 @@ app.get("/demo-holdings", demoTrading.demoHoldings);
 app.post("/demo-orders", demoTrading.demoOrders);
 app.get("/demo-transactions", demoTrading.demoTransactions);
 app.get("/stock-market", stockMarket.fetchStockMarket);
+app.get(
+  "/stock-market/company-name/:company_name",
+  stockMarket.getCompanyNameInfo
+);
+app.get(
+  "/stock-market/stock-symbol/:stock_symbol",
+  stockMarket.getStockSymbolInfo
+);
 
 app.listen(8080, () => {
   console.log("Listening on 8080");
