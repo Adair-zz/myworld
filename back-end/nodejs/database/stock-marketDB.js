@@ -35,7 +35,7 @@ const stockMarketSchema = new schema(
       required: true,
     },
     IPO_year: {
-      type: String,
+      type: Number,
       required: true,
     },
     volume: {

@@ -33,7 +33,7 @@ const StockMarketSlice = createSlice({
         state: StockMarketType[],
         action: PayloadAction<StockMarketType[]>
       ) {
-        state.splice(0, state.length, ...action.payload);
+        state.splice(1, state.length, ...action.payload);
       },
       prepare(stockMarket: StockMarketType[]) {
         return {

@@ -17,6 +17,11 @@ export interface SelectedStockType {
   market: string;
   company_name: string;
   stock_symbol: string;
+  country?: string;
+  IPO_year?: number;
+  volume?: number;
+  sector?: string;
+  industry?: string;
 }
 
 // for stockHoldingsSlice
