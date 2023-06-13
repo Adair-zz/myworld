@@ -1,5 +1,5 @@
 import { createContext, useState, useMemo } from "react";
-import { createTheme } from "@mui/material/styles";
+import { Theme, createTheme } from "@mui/material/styles";
 import { PaletteMode } from "@mui/material";
 
 interface Tokens {
@@ -265,7 +265,7 @@ export const useMode = () => {
     []
   );
 
-  const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
+  const theme: Theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
 
   return [theme, colorMode] as const;
 };

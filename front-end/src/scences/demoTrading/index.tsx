@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Box, Typography, useTheme } from "@mui/material";
+import { ReceiptOutlined } from "@mui/icons-material";
 
 import { tokens } from "../../theme";
 import { RootState, AppDispatch } from "../../store/store";
@@ -41,6 +42,11 @@ const DemoTrading = () => {
           titleVariant={"h2"}
           subtitleVariant={"h5"}
         />
+
+        <Box display={"flex"} gap={"6px"} color={colors.grey[100]}>
+          <ReceiptOutlined />
+          <Typography variant={"h5"}>All Transactions</Typography>
+        </Box>
       </Box>
 
       <Box
@@ -50,7 +56,7 @@ const DemoTrading = () => {
       >
         <Box
           gridColumn={"span 8"}
-          gridRow={"span 3"}
+          gridRow={"span 4"}
           sx={{
             backgroundColor: colors.primary[400],
             margin: "0 5px 5px 0",
@@ -61,29 +67,28 @@ const DemoTrading = () => {
         </Box>
         <Box
           gridColumn={"span 4"}
-          gridRow={"span 4"}
+          gridRow={"span 6"}
           sx={{ backgroundColor: colors.primary[400] }}
-          m={"0 0 5px 0"}
           overflow={"auto"}
         >
           <TradeTicket />
         </Box>
-        <Box
+        {/* <Box
           gridColumn={"span 8"}
           gridRow={"span 3"}
           sx={{ backgroundColor: colors.primary[400], margin: "0 5px 0 0" }}
           overflow={"auto"}
         >
           <Transaction transactions={demoTransactions} />
-        </Box>
+        </Box>*/}
         <Box
-          gridColumn={"span 4"}
+          gridColumn={"span 8"}
           gridRow={"span 2"}
-          sx={{ backgroundColor: colors.primary[400] }}
+          sx={{ backgroundColor: colors.primary[400], margin: "0 5px 0 0" }}
           overflow={"auto"}
         >
           {/* <StockNews /> */}
-          <Typography>Stock news</Typography>
+          <Typography>Something Here</Typography>
         </Box>
       </Box>
     </Box>

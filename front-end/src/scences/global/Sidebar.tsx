@@ -1,15 +1,20 @@
-import { ReactElement } from "react";
+import { ReactElement, useState, MouseEvent } from "react";
 import { Link } from "react-router-dom";
 import {
-  MenuItemStyles,
-  useProSidebar,
-  Sidebar,
-  Menu,
-  MenuItem,
-  // menuClasses,
-} from "react-pro-sidebar";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+  Box,
+  IconButton,
+  Typography,
+  Divider,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+import MuiDrawer from "@mui/material/Drawer";
+import { Theme, useTheme, styled, CSSObject } from "@mui/material/styles";
 import {
+  ChevronLeftOutlined,
   MenuOutlined,
   HomeOutlined,
   CandlestickChartOutlined,
@@ -20,116 +25,176 @@ import {
 import { tokens } from "../../theme";
 import "react-pro-sidebar/dist";
 
-interface ItemProps {
-  title: string;
-  to: string;
-  icon: ReactElement;
-}
-
-const Item = ({ title, to, icon }: ItemProps) => {
-  return (
-    <MenuItem
-      icon={icon}
-      component={<Link to={to} />}
-      // rootStyles={{
-      //   ["." + menuClasses.button]: {
-      //     "&:hover": {
-      //       color: "#868dfb",
-      //     },
-      //   },
-      // }}
-    >
-      <Typography>{title}</Typography>
-    </MenuItem>
-  );
-};
-
 const SideBar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const { collapseSidebar, collapsed } = useProSidebar();
+  const [open, setOpen] = useState(true);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const menuItemStyles: MenuItemStyles = {
-    root: {
-      fontSize: "13px",
-      fontWeight: 500,
-      color: colors.grey[100],
+  const handleDrawer = () => {
+    setOpen(!open);
+  };
+
+  const handleListItemClick = (event: MouseEvent, index: number) => {
+    setSelectedIndex(index);
+  };
+
+  const openedMixin = (theme: Theme): CSSObject => ({
+    width: 200,
+    backgroundColor: colors.primary[400],
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    overflowX: "hidden",
+  });
+
+  const closedMixin = (theme: Theme): CSSObject => ({
+    backgroundColor: colors.primary[400],
+    transition: theme.transitions.create("width", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    overflowX: "hidden",
+    width: `calc(${theme.spacing(7)} + 1px)`,
+    [theme.breakpoints.up("sm")]: {
+      width: `calc(${theme.spacing(8)} + 1px)`,
     },
-    icon: {
-      backgroundColor: "transparent",
-    },
-    button: {
-      "&:hover": {
-        backgroundColor: "inherit",
-        color: "#868dfb",
-      },
-    },
+  });
+
+  const DrawerHeader = styled("div")(({ theme }) => ({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    margin: "0 5px 0 0",
+    gap: "10px",
+    padding: theme.spacing(0, 1),
+    ...theme.mixins.toolbar,
+  }));
+
+  const StyledLink = styled(Link)({
+    textDecoration: "none",
+  });
+
+  const Drawer = styled(MuiDrawer, {
+    shouldForwardProp: (prop) => prop !== "open",
+  })(({ theme, open }) => ({
+    width: 200,
+    flexShrink: 0,
+    whiteSpace: "nowrap",
+    boxSizing: "border-box",
+    ...(open && {
+      ...openedMixin(theme),
+      "& .MuiDrawer-paper": openedMixin(theme),
+    }),
+    ...(!open && {
+      ...closedMixin(theme),
+      "& .MuiDrawer-paper": closedMixin(theme),
+    }),
+  }));
+
+  const Item = ({
+    text,
+    to,
+    index,
+    icon,
+  }: {
+    text: string;
+    to: string;
+    index: number;
+    icon: ReactElement;
+  }) => {
+    return (
+      <StyledLink to={to}>
+        <ListItem
+          key={text}
+          disablePadding
+          sx={{
+            display: "block",
+          }}
+        >
+          <ListItemButton
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? "initial" : "center",
+              px: 2.5,
+              // backgroundColor:
+              //   selectedIndex === index ? colors.primary[900] : "inherit",
+            }}
+            selected={selectedIndex === index}
+            onClick={(event) => handleListItemClick(event, index)}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: open ? 3 : "auto",
+                justifyContent: "center",
+              }}
+            >
+              {icon}
+            </ListItemIcon>
+            <ListItemText
+              primary={text}
+              sx={{
+                opacity: open ? 1 : 0,
+                color: `${colors.grey[100]}`,
+              }}
+            />
+          </ListItemButton>
+        </ListItem>
+      </StyledLink>
+    );
   };
 
   return (
     <Box
       sx={{
         display: "flex",
-        height: "100%",
+        bgcolor: `${colors.primary[400]}`,
       }}
     >
-      <Sidebar backgroundColor={colors.primary[400]} width={"200px"}>
-        <Menu menuItemStyles={menuItemStyles}>
-          <MenuItem
-            icon={
-              collapsed ? (
-                <MenuOutlined onClick={() => collapseSidebar()} />
-              ) : undefined
-            }
-            style={{ margin: "10px 0 20px 0", color: colors.grey[100] }}
+      <Drawer variant="permanent" open={open}>
+        <DrawerHeader>
+          <Typography
+            variant={"h4"}
+            color={colors.grey[100]}
+            sx={{ opacity: open ? 1 : 0 }}
           >
-            {!collapsed && (
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  // ml: 15,
-                }}
-              >
-                <Typography variant={"h4"} color={colors.grey[100]}>
-                  Zheng Zhang
-                </Typography>
-                <IconButton onClick={() => collapseSidebar()}>
-                  <MenuOutlined />
-                </IconButton>
-              </Box>
-            )}
-          </MenuItem>
-
-          <Item title="Dashboard" to="/" icon={<HomeOutlined />} />
-          <Item title="Stock" to="/stock" icon={<CandlestickChartOutlined />} />
+            Zheng Zhang
+          </Typography>
+          <IconButton onClick={handleDrawer}>
+            {open ? <ChevronLeftOutlined /> : <MenuOutlined />}
+          </IconButton>
+        </DrawerHeader>
+        <Divider />
+        <List>
+          <Item text={"Dashboard"} to={"/"} index={0} icon={<HomeOutlined />} />
           <Item
-            title="Stock News"
-            to="/stock-news"
+            text={"Stock"}
+            to={"/stock"}
+            index={1}
+            icon={<CandlestickChartOutlined />}
+          />
+          <Item
+            text={"Stock News"}
+            to={"/stock-news"}
+            index={2}
             icon={<NewspaperOutlined />}
           />
           <Item
-            title="Balance"
-            to="/balance"
+            text={"Balance"}
+            to={"/balance"}
+            index={3}
             icon={<AccountBalanceOutlined />}
           />
-          {!collapsed && (
-            <Typography
-              variant={"h6"}
-              color={colors.grey[100]}
-              sx={{ m: "10px 0 0 20px" }}
-            >
-              Trading
-            </Typography>
-          )}
           <Item
-            title="Demo Trading"
-            to="/demo-trading"
+            text={"Demo Trading"}
+            to={"/demo-trading"}
+            index={4}
             icon={<VoicemailOutlined />}
           />
-        </Menu>
-      </Sidebar>
+        </List>
+      </Drawer>
     </Box>
   );
 };
