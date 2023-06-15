@@ -8,6 +8,7 @@ import Stock from "./scences/stock";
 import StockNews from "./scences/stockNews";
 import Balance from "./scences/balance";
 import DemoTrading from "./scences/demoTrading";
+import DemoTransactions from "./scences/demoTrading/transactions";
 
 const router = createBrowserRouter([
   {
@@ -21,7 +22,19 @@ const router = createBrowserRouter([
         path: "/balance",
         element: <Balance />,
       },
-      { path: "/demo-trading", element: <DemoTrading /> },
+      {
+        path: "/demo-trading",
+        children: [
+          {
+            index: true,
+            element: <DemoTrading />,
+          },
+          {
+            path: "demo-transactions",
+            element: <DemoTransactions />,
+          },
+        ],
+      },
     ],
   },
 ]);

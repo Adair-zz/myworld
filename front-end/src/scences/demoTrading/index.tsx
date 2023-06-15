@@ -1,16 +1,16 @@
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { ReceiptOutlined } from "@mui/icons-material";
 
 import { tokens } from "../../theme";
 import { RootState, AppDispatch } from "../../store/store";
 import { fetchDemoHoldings } from "../../store/stockHoldingsSlice";
-import { fetchDemoTransactions } from "../../store/stockTransactionsSlice";
 import Header from "../../components/header";
 import Holding from "../../components/holdidng";
 import TradeTicket from "../../components/tradeTicket";
-import Transaction from "../../components/transaction";
 
 const DemoTrading = () => {
   const theme = useTheme();
@@ -18,15 +18,11 @@ const DemoTrading = () => {
 
   useEffect(() => {
     dispatch(fetchDemoHoldings());
-    dispatch(fetchDemoTransactions());
   }, []);
 
   const colors = tokens(theme.palette.mode);
   const demoHoldings = useSelector(
     (state: RootState) => state.stockHoldings.demo_holdings
-  );
-  const demoTransactions = useSelector(
-    (state: RootState) => state.stockTransactions.demo_transactions
   );
 
   return (
@@ -42,11 +38,15 @@ const DemoTrading = () => {
           titleVariant={"h2"}
           subtitleVariant={"h5"}
         />
-
-        <Box display={"flex"} gap={"6px"} color={colors.grey[100]}>
-          <ReceiptOutlined />
-          <Typography variant={"h5"}>All Transactions</Typography>
-        </Box>
+        <Link
+          to="/demo-trading/demo-transactions"
+          style={{ textDecoration: "none" }}
+        >
+          <Box display={"flex"} gap={"6px"} color={colors.grey[100]}>
+            <ReceiptOutlined />
+            <Typography variant={"h5"}>All Transactions</Typography>
+          </Box>
+        </Link>
       </Box>
 
       <Box
@@ -73,22 +73,13 @@ const DemoTrading = () => {
         >
           <TradeTicket />
         </Box>
-        {/* <Box
-          gridColumn={"span 8"}
-          gridRow={"span 3"}
-          sx={{ backgroundColor: colors.primary[400], margin: "0 5px 0 0" }}
-          overflow={"auto"}
-        >
-          <Transaction transactions={demoTransactions} />
-        </Box>*/}
         <Box
           gridColumn={"span 8"}
           gridRow={"span 2"}
           sx={{ backgroundColor: colors.primary[400], margin: "0 5px 0 0" }}
           overflow={"auto"}
         >
-          {/* <StockNews /> */}
-          <Typography>Something Here</Typography>
+          <Typography>AI Recommendation Here</Typography>
         </Box>
       </Box>
     </Box>

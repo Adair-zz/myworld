@@ -23,13 +23,12 @@ import {
   VoicemailOutlined,
 } from "@mui/icons-material";
 import { tokens } from "../../theme";
-import "react-pro-sidebar/dist";
 
 const SideBar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [open, setOpen] = useState(true);
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [open, setOpen] = useState<boolean>(true);
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
   const handleDrawer = () => {
     setOpen(!open);
@@ -118,8 +117,6 @@ const SideBar = () => {
               minHeight: 48,
               justifyContent: open ? "initial" : "center",
               px: 2.5,
-              // backgroundColor:
-              //   selectedIndex === index ? colors.primary[900] : "inherit",
             }}
             selected={selectedIndex === index}
             onClick={(event) => handleListItemClick(event, index)}
