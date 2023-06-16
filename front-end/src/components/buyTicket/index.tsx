@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Box,
@@ -6,11 +6,10 @@ import {
   Typography,
   Autocomplete,
   TextField,
-  useTheme,
   Stack,
   Slider,
-  styled,
 } from "@mui/material";
+import { useTheme, styled } from "@mui/material/styles";
 
 import { tokens } from "../../theme";
 import { AppDispatch, RootState } from "../../store/store";
@@ -18,7 +17,14 @@ import { StockMarketType } from "../../utils/interface";
 import {
   getCompanyNameInfo,
   getStockSymbolInfo,
+  submitBuyTicket,
+  setStockValue,
+  setquantity,
+  setTotalAmount,
+  setTpPrice,
+  setSlPrice,
 } from "../../store/stockSelectSlice";
+import { getCurrentDate, getCurrentTime } from "../../utils/dateTime";
 
 const optionsProcess = (stockMarket: StockMarketType[]) => {
   const stockMarketOptions: string[] = [];
@@ -36,7 +42,7 @@ const optionsProcess = (stockMarket: StockMarketType[]) => {
   return { stockMarketOptions, stockCompanyNameOptions, stockSymbolOptions };
 };
 
-const amountMarks = [
+const quantityMarks = [
   {
     value: 0,
   },
@@ -85,7 +91,7 @@ const BuyTicket = () => {
 
   const colors = tokens(theme.palette.mode);
   const stockMarket = useSelector((state: RootState) => state.stockMarket);
-  const selectedstock = useSelector((state: RootState) => state.stockSelect);
+  const selectedStock = useSelector((state: RootState) => state.stockSelect);
   const { stockMarketOptions, stockCompanyNameOptions, stockSymbolOptions } =
     optionsProcess(stockMarket);
 
@@ -102,22 +108,48 @@ const BuyTicket = () => {
         case "stock_symbol":
           dispatch(getStockSymbolInfo(newValue));
           break;
+        default:
+          return;
       }
     }
   };
 
   const handleTpPercentageChange = (
-    event: Event,
+    _: Event,
     newValue: number | number[]
   ): void => {
     setTpPercentage(newValue as number);
   };
 
   const handleSlPercentageChange = (
-    event: Event,
+    _: Event,
     newValue: number | number[]
   ): void => {
     setSlPercentage(newValue as number);
+  };
+
+  const handleBuyTicket = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = {
+      market: selectedStock.market,
+      company_name: selectedStock.company_name,
+      stock_symbol: selectedStock.stock_symbol,
+      transaction_type: "buy",
+      stock_value: selectedStock.stock_value,
+      quantity: selectedStock.quantity,
+      total_amount:
+        selectedStock.total_amount !== undefined &&
+        selectedStock.brokerage_fee !== undefined
+          ? selectedStock.total_amount + selectedStock.brokerage_fee
+          : undefined,
+      tp_price: selectedStock.tp_price,
+      sl_price: selectedStock.sl_price,
+      brokerage_fee: selectedStock.brokerage_fee,
+      date: getCurrentDate(),
+      time: getCurrentTime(),
+    };
+
+    dispatch(submitBuyTicket(data));
   };
 
   const StyledBox = styled(Box)({
@@ -143,133 +175,230 @@ const BuyTicket = () => {
 
   return (
     <Box m={"20px 5px 0 5px"}>
-      <StyledBox>
-        <Autocomplete
-          value={selectedstock.market}
-          options={stockMarketOptions}
-          filterSelectedOptions
-          renderInput={(params) => (
-            <TextField {...params} label="Market" variant="standard" />
-          )}
-          sx={{ width: "40%" }}
-        />
-
-        <Autocomplete
-          value={selectedstock.stock_symbol}
-          options={stockSymbolOptions}
-          filterSelectedOptions
-          onChange={(event: ChangeEvent<{}>, newValue: string | "" | null) => {
-            handleSelectedStockChange(event, newValue, "stock_symbol");
-          }}
-          renderInput={(params) => (
-            <TextField {...params} label="Symbol" variant="standard" />
-          )}
-          sx={{ width: "40%" }}
-        />
-      </StyledBox>
-
-      <StyledBox>
-        <Autocomplete
-          value={selectedstock.company_name}
-          options={stockCompanyNameOptions}
-          filterSelectedOptions
-          onChange={(event: ChangeEvent<{}>, newValue: string | "" | null) => {
-            handleSelectedStockChange(event, newValue, "company_name");
-          }}
-          renderInput={(params) => (
-            <TextField {...params} label="Company Name" variant="standard" />
-          )}
-          sx={{ width: "55%" }}
-        />
-
-        <TextField
-          label="Stock Value"
-          variant="standard"
-          sx={{ width: "25%" }}
-        />
-      </StyledBox>
-
-      <StyledBox>
-        <Stack gap={"10px"} sx={{ width: "40%" }}>
-          <TextField label="Amount" variant="standard" />
-          <StyledSlider
-            value={tpPercentage}
-            onChange={handleTpPercentageChange}
-            valueLabelFormat={valueLabelFormat}
-            step={1}
-            marks={amountMarks}
-            min={0}
-            max={100}
-            valueLabelDisplay="on"
+      <form onSubmit={handleBuyTicket}>
+        <StyledBox>
+          <Autocomplete
+            value={selectedStock.market}
+            options={stockMarketOptions}
+            filterSelectedOptions
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Market"
+                variant="standard"
+                required
+              />
+            )}
+            sx={{ width: "40%" }}
           />
-        </Stack>
 
-        <Stack gap={"10px"} sx={{ width: "40%" }}>
-          <TextField label="Total" variant="standard" />
-          <StyledSlider
-            value={tpPercentage}
-            onChange={handleTpPercentageChange}
-            valueLabelFormat={valueLabelFormat}
-            step={1}
-            marks={amountMarks}
-            min={0}
-            max={100}
-            valueLabelDisplay="on"
+          <Autocomplete
+            value={selectedStock.stock_symbol}
+            options={stockSymbolOptions}
+            filterSelectedOptions
+            onChange={(
+              event: ChangeEvent<{}>,
+              newValue: string | "" | null
+            ) => {
+              handleSelectedStockChange(event, newValue, "stock_symbol");
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Symbol"
+                variant="standard"
+                required
+              />
+            )}
+            aria-required
+            sx={{ width: "40%" }}
           />
-        </Stack>
-      </StyledBox>
+        </StyledBox>
 
-      <StyledBox>
-        <Typography width={"40%"}>Available: your balance</Typography>
-        <Typography width={"40%"}>Max Buy: your balance</Typography>
-      </StyledBox>
-
-      <StyledBox>
-        <Stack gap={"10px"} sx={{ width: "40%" }}>
-          <TextField label="TP Trigger Price" variant="standard" />
-          <StyledSlider
-            value={tpPercentage}
-            onChange={handleTpPercentageChange}
-            valueLabelFormat={valueLabelFormat}
-            step={1}
-            marks={triggerMarks}
-            min={0}
-            max={20}
-            valueLabelDisplay="on"
+        <StyledBox>
+          <Autocomplete
+            value={selectedStock.company_name}
+            options={stockCompanyNameOptions}
+            filterSelectedOptions
+            onChange={(
+              event: ChangeEvent<{}>,
+              newValue: string | "" | null
+            ) => {
+              handleSelectedStockChange(event, newValue, "company_name");
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Company Name"
+                variant="standard"
+                required
+              />
+            )}
+            aria-required
+            sx={{ width: "55%" }}
           />
-        </Stack>
-        <Stack gap={"10px"} sx={{ width: "40%" }}>
-          <TextField label="SL Trigger Price" variant="standard" />
-          <StyledSlider
-            value={slPercentage}
-            onChange={handleSlPercentageChange}
-            valueLabelFormat={valueLabelFormat}
-            step={1}
-            marks={triggerMarks}
-            min={0}
-            max={10}
-            valueLabelDisplay="on"
-          />
-        </Stack>
-      </StyledBox>
 
-      <Box
-        display={"flex"}
-        justifyContent={"center"}
-        alignItems={"center"}
-        m={"50px 0 0 0"}
-      >
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: colors.greenAccent[600],
-            width: "35%",
-            borderRadius: "15px",
-          }}
+          <TextField
+            value={selectedStock.stock_value}
+            onChange={(
+              event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+            ) => {
+              const newStockValue = isNaN(parseFloat(event.target.value))
+                ? undefined
+                : parseFloat(event.target.value);
+              dispatch(setStockValue(newStockValue));
+            }}
+            type="number"
+            label="Stock Value"
+            variant="standard"
+            required
+            autoFocus
+            sx={{ width: "25%" }}
+          />
+        </StyledBox>
+
+        <StyledBox>
+          <Stack gap={"10px"} sx={{ width: "40%" }}>
+            <TextField
+              value={selectedStock.quantity}
+              onChange={(
+                event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+              ) => {
+                const newquantity = isNaN(parseFloat(event.target.value))
+                  ? undefined
+                  : parseFloat(event.target.value);
+                dispatch(setquantity(newquantity));
+              }}
+              type="number"
+              label="quantity"
+              variant="standard"
+              required
+              autoFocus
+            />
+            <StyledSlider
+              value={tpPercentage}
+              onChange={handleTpPercentageChange}
+              valueLabelFormat={valueLabelFormat}
+              step={1}
+              marks={quantityMarks}
+              min={0}
+              max={100}
+              valueLabelDisplay="on"
+            />
+          </Stack>
+
+          <Stack gap={"10px"} sx={{ width: "40%" }}>
+            <TextField
+              value={selectedStock.total_amount}
+              onChange={(
+                event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+              ) => {
+                const newTotalAmount = isNaN(parseFloat(event.target.value))
+                  ? undefined
+                  : parseFloat(event.target.value);
+                dispatch(setTotalAmount(newTotalAmount));
+              }}
+              type="number"
+              label="Total Amount"
+              variant="standard"
+              required
+              autoFocus
+            />
+            <StyledSlider
+              value={tpPercentage}
+              onChange={handleTpPercentageChange}
+              valueLabelFormat={valueLabelFormat}
+              step={1}
+              marks={quantityMarks}
+              min={0}
+              max={100}
+              valueLabelDisplay="on"
+            />
+          </Stack>
+        </StyledBox>
+
+        <StyledBox>
+          <Typography width={"40%"}>Available: your balance</Typography>
+          <Typography width={"40%"}>Max Buy: your balance</Typography>
+        </StyledBox>
+
+        <StyledBox>
+          <Stack gap={"10px"} sx={{ width: "40%" }}>
+            <TextField
+              value={selectedStock.tp_price}
+              onChange={(
+                event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+              ) => {
+                const newTpPrice = isNaN(parseFloat(event.target.value))
+                  ? undefined
+                  : parseFloat(event.target.value);
+                dispatch(setTpPrice(newTpPrice));
+              }}
+              type="number"
+              label="TP Trigger Price"
+              variant="standard"
+              required
+              autoFocus
+            />
+            <StyledSlider
+              value={tpPercentage}
+              onChange={handleTpPercentageChange}
+              valueLabelFormat={valueLabelFormat}
+              step={1}
+              marks={triggerMarks}
+              min={0}
+              max={20}
+              valueLabelDisplay="on"
+            />
+          </Stack>
+          <Stack gap={"10px"} sx={{ width: "40%" }}>
+            <TextField
+              value={selectedStock.sl_price}
+              onChange={(
+                event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+              ) => {
+                const newSlPrice = isNaN(parseFloat(event.target.value))
+                  ? undefined
+                  : parseFloat(event.target.value);
+                dispatch(setSlPrice(newSlPrice));
+              }}
+              label="SL Trigger Price"
+              variant="standard"
+              required
+              autoFocus
+            />
+            <StyledSlider
+              value={slPercentage}
+              onChange={handleSlPercentageChange}
+              valueLabelFormat={valueLabelFormat}
+              step={1}
+              marks={triggerMarks}
+              min={0}
+              max={10}
+              valueLabelDisplay="on"
+            />
+          </Stack>
+        </StyledBox>
+
+        <Box
+          display={"flex"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          m={"50px 0 0 0"}
         >
-          Buy {selectedstock.stock_symbol}
-        </Button>
-      </Box>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              backgroundColor: colors.greenAccent[600],
+              width: "35%",
+              borderRadius: "15px",
+            }}
+          >
+            Buy {selectedStock.stock_symbol}
+          </Button>
+        </Box>
+      </form>
     </Box>
   );
 };

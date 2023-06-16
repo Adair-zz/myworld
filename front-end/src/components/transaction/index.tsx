@@ -1,4 +1,4 @@
-import { Box, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 
 import { tokens } from "../../theme";
@@ -6,17 +6,27 @@ import { StockTransactionsType } from "../../utils/interface";
 import Header from "../header";
 
 const columns = [
-  // { field: "_id", headerName: "ID" },
-  { field: "market", headerName: "Market", flex: 0.7 },
-  { field: "company_name", headerName: "Name", flex: 2 },
-  { field: "stock_symbol", headerName: "Symbol", flex: 0.6 },
-  { field: "transaction_type", headerName: "Type", flex: 0.5 },
-  { field: "stock_value", headerName: "Price", flex: 0.6 },
-  { field: "quantity", headerName: "Quantity", flex: 0.6 },
-  { field: "brokerage_fee", headerName: "Fees", flex: 0.6 },
-  { field: "equity", headerName: "Equity", flex: 0.7 },
-  { field: "date", headerName: "Date", flex: 0.7 },
-  { field: "time", headerName: "Time", flex: 0.7 },
+  { field: "market", headerName: "Market", flex: 0.3 },
+  { field: "company_name", headerName: "Name", flex: 1 },
+  { field: "stock_symbol", headerName: "Symbol", flex: 0.3 },
+  { field: "transaction_type", headerName: "Type", flex: 0.3 },
+  { field: "stock_value", headerName: "Price", flex: 0.3 },
+  { field: "quantity", headerName: "Quantity", flex: 0.3 },
+  { field: "brokerage_fee", headerName: "Fees", flex: 0.3 },
+  { field: "total_amount", headerName: "Amount", flex: 0.3 },
+  {
+    field: "tp_price",
+    headerName: "TP Price",
+    flex: 0.3,
+  },
+  {
+    field: "sl_price",
+    headerName: "SL Price",
+    flex: 0.3,
+  },
+  { field: "date", headerName: "Date", flex: 0.3 },
+  { field: "time", headerName: "Time", flex: 0.3 },
+  { field: "_id", headerName: "Image", flex: 0.8 },
 ];
 
 const Transaction = ({

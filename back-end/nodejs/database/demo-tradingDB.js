@@ -46,7 +46,15 @@ const demoTransactionsSchema = new Schema(
       type: Number,
       required: true,
     },
-    equity: {
+    total_amount: {
+      type: Number,
+      required: true,
+    },
+    tp_price: {
+      type: Number,
+      required: true,
+    },
+    sl_price: {
       type: Number,
       required: true,
     },

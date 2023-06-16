@@ -21,7 +21,7 @@ const DemoTransactions = () => {
   const demoTransactions = useSelector(
     (state: RootState) => state.stockTransactions.demo_transactions
   );
-  console.log(demoTransactions);
+
   return (
     <Box m={"0 10px 0 10px"}>
       <Box

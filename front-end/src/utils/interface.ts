@@ -11,19 +11,6 @@ export interface StockMarketType {
   industry: string;
 }
 
-// for stockSelectSlice
-export interface SelectedStockType {
-  status: string;
-  market: string;
-  company_name: string;
-  stock_symbol: string;
-  country?: string;
-  IPO_year?: number;
-  volume?: number;
-  sector?: string;
-  industry?: string;
-}
-
 // for stockHoldingsSlice
 export interface StockHoldingsType {
   _id: string;
@@ -43,19 +30,25 @@ export interface StockHoldingsSlice {
 }
 
 // for stockTransactionsSlice
-export interface StockTransactionsType {
-  _id: string;
+export type SelectedStockBaseType = {
+  transaction_type: string;
   market: string;
   company_name: string;
   stock_symbol: string;
-  transaction_type: string;
+};
+
+export type StockTransactionsBaseType = SelectedStockBaseType & {
   stock_value: number | undefined;
   quantity: number | undefined;
   brokerage_fee: number | undefined;
-  equity: number | undefined;
+  total_amount: number | undefined;
+  tp_price: number | undefined;
+  sl_price: number | undefined;
   date: string;
   time: string;
-}
+};
+
+export type StockTransactionsType = StockTransactionsBaseType & { _id: string };
 
 export interface StockTransactionsSlice {
   demo_transactions: StockTransactionsType[];

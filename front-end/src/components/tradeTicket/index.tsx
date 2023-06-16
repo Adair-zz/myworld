@@ -66,9 +66,9 @@ const TradeTicket = () => {
         </ButtonGroup>
       </Box>
 
-      {selectedstock.status === "buy" && <BuyTicket />}
+      {selectedstock.transaction_type === "buy" && <BuyTicket />}
 
-      {selectedstock.status === "sell" && (
+      {selectedstock.transaction_type === "sell" && (
         <Box m={"20px 5px 0 5px"}>
           <Box
             display={"flex"}

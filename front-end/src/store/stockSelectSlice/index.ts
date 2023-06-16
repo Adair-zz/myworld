@@ -1,5 +1,8 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { SelectedStockType } from "../../utils/interface";
+import {
+  SelectedStockBaseType,
+  StockTransactionsBaseType,
+} from "../../utils/interface";
 import axios from "axios";
 
 export const getCompanyNameInfo = createAsyncThunk(
@@ -8,7 +11,6 @@ export const getCompanyNameInfo = createAsyncThunk(
     const response = await axios.get(
       `http://localhost:8080/stock-market/company-name/${company_name}`
     );
-    console.log(response.data);
     return response.data;
   }
 );
@@ -23,11 +25,26 @@ export const getStockSymbolInfo = createAsyncThunk(
   }
 );
 
-const initialState: SelectedStockType = {
-  status: "buy",
+export const submitBuyTicket = createAsyncThunk(
+  "StockSelect/submitBuyTicket",
+  async (data: StockTransactionsBaseType) => {
+    await axios.post("http://localhost:8080/demo-orders", data);
+  }
+);
+
+const initialState: StockTransactionsBaseType = {
+  transaction_type: "buy",
   market: "",
   company_name: "",
   stock_symbol: "",
+  stock_value: undefined,
+  quantity: undefined,
+  brokerage_fee: 5,
+  total_amount: undefined,
+  tp_price: undefined,
+  sl_price: undefined,
+  date: "",
+  time: "",
 };
 
 const stockSelectSlice = createSlice({
@@ -36,30 +53,104 @@ const stockSelectSlice = createSlice({
   reducers: {
     stockSelect: {
       reducer(
-        state: SelectedStockType,
-        action: PayloadAction<SelectedStockType>
+        state: StockTransactionsBaseType,
+        action: PayloadAction<SelectedStockBaseType>
       ) {
-        const { status, market, company_name, stock_symbol } = action.payload;
-        state.status = status;
+        const { transaction_type, market, company_name, stock_symbol } =
+          action.payload;
+        state.transaction_type = transaction_type;
         state.market = market;
         state.company_name = company_name;
         state.stock_symbol = stock_symbol;
       },
-      prepare(selectedStock: SelectedStockType) {
+      prepare(selectedStock: SelectedStockBaseType) {
         return {
           payload: selectedStock,
         };
       },
     },
     statusChange: {
-      reducer(state: SelectedStockType, action: PayloadAction<string>) {
-        state.status = action.payload;
+      reducer(state: StockTransactionsBaseType, action: PayloadAction<string>) {
+        state.transaction_type = action.payload;
       },
-      prepare(status: string) {
+      prepare(transaction_type: string) {
         return {
-          payload: status,
+          payload: transaction_type,
         };
       },
+    },
+    setStockValue: {
+      reducer(
+        state: StockTransactionsBaseType,
+        action: PayloadAction<number | undefined>
+      ) {
+        state.stock_value = action.payload;
+      },
+      prepare(stockValue: number | undefined) {
+        return {
+          payload: stockValue,
+        };
+      },
+    },
+    setquantity: {
+      reducer(
+        state: StockTransactionsBaseType,
+        action: PayloadAction<number | undefined>
+      ) {
+        state.quantity = action.payload;
+      },
+      prepare(quantity: number | undefined) {
+        return {
+          payload: quantity,
+        };
+      },
+    },
+    setTotalAmount: {
+      reducer(
+        state: StockTransactionsBaseType,
+        action: PayloadAction<number | undefined>
+      ) {
+        state.total_amount = action.payload;
+      },
+      prepare(total_amount: number | undefined) {
+        return {
+          payload: total_amount,
+        };
+      },
+    },
+    setTpPrice: {
+      reducer(
+        state: StockTransactionsBaseType,
+        action: PayloadAction<number | undefined>
+      ) {
+        state.tp_price = action.payload;
+      },
+      prepare(tpPrice: number | undefined) {
+        return {
+          payload: tpPrice,
+        };
+      },
+    },
+    setSlPrice: {
+      reducer(
+        state: StockTransactionsBaseType,
+        action: PayloadAction<number | undefined>
+      ) {
+        state.sl_price = action.payload;
+      },
+      prepare(slPrice: number | undefined) {
+        return {
+          payload: slPrice,
+        };
+      },
+    },
+    resetSelectedStock: (state: StockTransactionsBaseType) => {
+      state.stock_value = undefined;
+      state.quantity = undefined;
+      state.brokerage_fee = undefined;
+      state.total_amount = undefined;
+      state.tp_price = undefined;
+      state.sl_price = undefined;
     },
   },
   extraReducers(builder) {
@@ -67,8 +158,8 @@ const stockSelectSlice = createSlice({
       .addCase(
         getCompanyNameInfo.fulfilled,
         (
-          state: SelectedStockType,
-          action: PayloadAction<SelectedStockType[]>
+          state: StockTransactionsBaseType,
+          action: PayloadAction<StockTransactionsBaseType[]>
         ) => {
           const data = action.payload;
           state.market = data[0].market;
@@ -80,8 +171,8 @@ const stockSelectSlice = createSlice({
       .addCase(
         getStockSymbolInfo.fulfilled,
         (
-          state: SelectedStockType,
-          action: PayloadAction<SelectedStockType[]>
+          state: StockTransactionsBaseType,
+          action: PayloadAction<StockTransactionsBaseType[]>
         ) => {
           const data = action.payload;
           state.market = data[0].market;
@@ -90,8 +181,19 @@ const stockSelectSlice = createSlice({
           return state;
         }
       );
+    builder.addCase(submitBuyTicket.fulfilled, () => {
+      console.log("Order Successfully!");
+    });
   },
 });
 
-export const { stockSelect, statusChange } = stockSelectSlice.actions;
+export const {
+  stockSelect,
+  statusChange,
+  setStockValue,
+  setquantity,
+  setTotalAmount,
+  setTpPrice,
+  setSlPrice,
+} = stockSelectSlice.actions;
 export default stockSelectSlice.reducer;

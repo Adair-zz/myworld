@@ -21,7 +21,9 @@ const demoOrders = async (req, res) => {
       stock_value,
       quantity,
       brokerage_fee,
-      equity,
+      total_amount,
+      tp_price,
+      sl_price,
       date,
       time,
     } = req.body;
@@ -34,13 +36,15 @@ const demoOrders = async (req, res) => {
       stock_value: stock_value,
       quantity: quantity,
       brokerage_fee: brokerage_fee,
-      equity: equity,
+      total_amount: total_amount,
+      tp_price: tp_price,
+      sl_price: sl_price,
       date: date,
       time: time,
     });
 
     await newDemoOrder.save();
-    res.status(201);
+    res.status(201).json({ status: 201 });
   } catch (error) {
     res.status(500).json({ status: 500, error: error });
   }

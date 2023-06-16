@@ -8,7 +8,7 @@ import Stock from "./scences/stock";
 import StockNews from "./scences/stockNews";
 import Balance from "./scences/balance";
 import DemoTrading from "./scences/demoTrading";
-import DemoTransactions from "./scences/demoTrading/transactions";
+import DemoTransactions from "./scences/demoTrading/demoTransactions";
 
 const router = createBrowserRouter([
   {

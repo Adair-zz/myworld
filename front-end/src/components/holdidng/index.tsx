@@ -41,7 +41,7 @@ const Holding = ({ holdings }: { holdings: StockHoldingsType[] }) => {
               size={"small"}
               id={row._id}
               onClick={() =>
-                dispatch(stockSelect({ ...stockInfo, status: "buy" }))
+                dispatch(stockSelect({ ...stockInfo, transaction_type: "buy" }))
               }
             >
               Buy
@@ -55,7 +55,7 @@ const Holding = ({ holdings }: { holdings: StockHoldingsType[] }) => {
                 dispatch(
                   stockSelect({
                     ...stockInfo,
-                    status: "sell",
+                    transaction_type: "sell",
                   })
                 )
               }
