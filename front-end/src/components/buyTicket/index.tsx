@@ -19,7 +19,7 @@ import {
   getStockSymbolInfo,
   submitBuyTicket,
   setStockValue,
-  setquantity,
+  setQuantity,
   setTotalAmount,
   setTpPrice,
   setSlPrice,
@@ -162,7 +162,7 @@ const BuyTicket = () => {
   });
 
   const StyledSlider = styled(Slider)({
-    color: colors.grey[100],
+    color: colors.grey[400],
     "& .MuiSlider-valueLabel": {
       top: 45,
       backgroundColor: "transparent",
@@ -189,7 +189,12 @@ const BuyTicket = () => {
                 required
               />
             )}
-            sx={{ width: "40%" }}
+            sx={{
+              width: "40%",
+              ".Mui-focused": {
+                color: colors.grey[100],
+              },
+            }}
           />
 
           <Autocomplete
@@ -211,7 +216,12 @@ const BuyTicket = () => {
               />
             )}
             aria-required
-            sx={{ width: "40%" }}
+            sx={{
+              width: "40%",
+              ".Mui-focused": {
+                color: colors.grey[100],
+              },
+            }}
           />
         </StyledBox>
 
@@ -235,9 +245,13 @@ const BuyTicket = () => {
               />
             )}
             aria-required
-            sx={{ width: "55%" }}
+            sx={{
+              width: "55%",
+              ".Mui-focused": {
+                color: colors.grey[100],
+              },
+            }}
           />
-
           <TextField
             value={selectedStock.stock_value}
             onChange={(
@@ -252,8 +266,15 @@ const BuyTicket = () => {
             label="Stock Value"
             variant="standard"
             required
-            autoFocus
-            sx={{ width: "25%" }}
+            sx={{
+              width: "25%",
+              ".Mui-focused": {
+                color: colors.grey[100],
+              },
+              ".MuiTextField-root": {
+                color: colors.grey[100],
+              },
+            }}
           />
         </StyledBox>
 
@@ -267,13 +288,17 @@ const BuyTicket = () => {
                 const newquantity = isNaN(parseFloat(event.target.value))
                   ? undefined
                   : parseFloat(event.target.value);
-                dispatch(setquantity(newquantity));
+                dispatch(setQuantity(newquantity));
               }}
               type="number"
               label="quantity"
               variant="standard"
               required
-              autoFocus
+              sx={{
+                ".Mui-focused": {
+                  color: colors.grey[100],
+                },
+              }}
             />
             <StyledSlider
               value={tpPercentage}
@@ -302,7 +327,11 @@ const BuyTicket = () => {
               label="Total Amount"
               variant="standard"
               required
-              autoFocus
+              sx={{
+                ".Mui-focused": {
+                  color: colors.grey[100],
+                },
+              }}
             />
             <StyledSlider
               value={tpPercentage}
@@ -317,7 +346,7 @@ const BuyTicket = () => {
           </Stack>
         </StyledBox>
 
-        <StyledBox>
+        <StyledBox sx={{ margin: "30px 0 15px 0" }} color={colors.grey[300]}>
           <Typography width={"40%"}>Available: your balance</Typography>
           <Typography width={"40%"}>Max Buy: your balance</Typography>
         </StyledBox>
@@ -338,8 +367,13 @@ const BuyTicket = () => {
               label="TP Trigger Price"
               variant="standard"
               required
-              autoFocus
+              sx={{
+                ".Mui-focused": {
+                  color: colors.grey[100],
+                },
+              }}
             />
+
             <StyledSlider
               value={tpPercentage}
               onChange={handleTpPercentageChange}
@@ -365,7 +399,11 @@ const BuyTicket = () => {
               label="SL Trigger Price"
               variant="standard"
               required
-              autoFocus
+              sx={{
+                ".Mui-focused": {
+                  color: colors.grey[100],
+                },
+              }}
             />
             <StyledSlider
               value={slPercentage}

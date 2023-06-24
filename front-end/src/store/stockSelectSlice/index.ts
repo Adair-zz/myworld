@@ -92,7 +92,7 @@ const stockSelectSlice = createSlice({
         };
       },
     },
-    setquantity: {
+    setQuantity: {
       reducer(
         state: StockTransactionsBaseType,
         action: PayloadAction<number | undefined>
@@ -191,7 +191,7 @@ export const {
   stockSelect,
   statusChange,
   setStockValue,
-  setquantity,
+  setQuantity,
   setTotalAmount,
   setTpPrice,
   setSlPrice,
