@@ -31,7 +31,9 @@ const DemoTransactions = () => {
       >
         <Header
           title={"DEMO TRANSACTIONS"}
-          subtitle={"Learn from Your Records"}
+          subtitle={
+            "Dive into Your Transaction History. Learn from Your Records"
+          }
           titleVariant={"h2"}
           subtitleVariant={"h5"}
         />

@@ -1,33 +1,20 @@
-import { Box, Typography, useTheme } from "@mui/material";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { useState } from "react";
+import {
+  Box,
+  Typography,
+  Button,
+  Modal,
+  Chip,
+  Stack,
+  IconButton,
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { CancelOutlined } from "@mui/icons-material";
 
 import { tokens } from "../../theme";
 import { StockTransactionsType } from "../../utils/interface";
-import Header from "../header";
-
-const columns = [
-  { field: "market", headerName: "Market", flex: 0.3 },
-  { field: "company_name", headerName: "Name", flex: 1 },
-  { field: "stock_symbol", headerName: "Symbol", flex: 0.3 },
-  { field: "transaction_type", headerName: "Type", flex: 0.3 },
-  { field: "stock_value", headerName: "Price", flex: 0.3 },
-  { field: "quantity", headerName: "Quantity", flex: 0.3 },
-  { field: "brokerage_fee", headerName: "Fees", flex: 0.3 },
-  { field: "total_amount", headerName: "Amount", flex: 0.3 },
-  {
-    field: "tp_price",
-    headerName: "TP Price",
-    flex: 0.3,
-  },
-  {
-    field: "sl_price",
-    headerName: "SL Price",
-    flex: 0.3,
-  },
-  { field: "date", headerName: "Date", flex: 0.3 },
-  { field: "time", headerName: "Time", flex: 0.3 },
-  { field: "_id", headerName: "Image", flex: 0.8 },
-];
+import TransactionHeader from "./transactionHeader";
+import ModalHeader from "./modalHeader";
 
 const Transaction = ({
   transactions,
@@ -37,24 +24,135 @@ const Transaction = ({
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+
+  const handleModal = () => {
+    setModalOpen(!modalOpen);
+  };
+
   return (
-    <Box m={"5px 5px 0 5px"}>
-      <Header
-        title="Transactions"
-        subtitle="Dive into Your Transaction History"
-        titleVariant="h4"
-        subtitleVariant="h6"
-        isAlign={true}
-      />
-      <Box>
-        {transactions != null && (
-          <DataGrid
-            rows={transactions}
-            columns={columns}
-            getRowId={(row) => row._id}
-            components={{ Toolbar: GridToolbar }}
-          />
-        )}
+    <Box m={"5px 5px 0 5px"} height={"540px"}>
+      <TransactionHeader />
+
+      <Box margin={"10px 0 10px 10px"}>
+        {transactions != null &&
+          transactions.map((transaction) => {
+            const {
+              market,
+              company_name,
+              stock_symbol,
+              transaction_type,
+              stock_value,
+              quantity,
+              brokerage_fee,
+              total_amount,
+              tp_price,
+              sl_price,
+              date,
+              time,
+              _id,
+            } = transaction;
+            return (
+              <Box
+                key={_id}
+                display={"flex"}
+                height={"35px"}
+                overflow={"hidden"}
+                color={colors.grey[100]}
+              >
+                <Typography width={"6%"}>{market}</Typography>
+                <Box width={"19%"}>
+                  <Typography
+                    sx={{
+                      width: "90%",
+                      overflow: "auto",
+                      whiteSpace: "nowrap",
+                      overflowY: "hidden",
+                    }}
+                  >
+                    {company_name}
+                  </Typography>
+                </Box>
+                <Typography width={"6%"}>{stock_symbol}</Typography>
+                <Typography width={"4%"}>{transaction_type}</Typography>
+                <Typography width={"6%"}>{stock_value}</Typography>
+                <Typography width={"6%"}>{quantity}</Typography>
+                <Typography width={"6%"}>{brokerage_fee}</Typography>
+                <Typography width={"6%"}>{total_amount}</Typography>
+                <Typography width={"6%"}>{tp_price}</Typography>
+                <Typography width={"6%"}>{sl_price}</Typography>
+                <Typography width={"6%"}>{date}</Typography>
+                <Typography width={"6%"}>{time}</Typography>
+                <Box
+                  width={"16%"}
+                  display={"flex"}
+                  gap={"7%"}
+                  justifyContent={"flex-start"}
+                  alignContent={"center"}
+                >
+                  <Typography
+                    sx={{
+                      width: "60%",
+                      overflow: "auto",
+                      whiteSpace: "nowrap",
+                      overflowY: "hidden",
+                    }}
+                  >
+                    {_id}
+                  </Typography>
+                  <Button
+                    onClick={handleModal}
+                    variant="contained"
+                    sx={{
+                      bgcolor: colors.greenAccent[600],
+                      width: "20%",
+                      height: "60%",
+                      borderRadius: "10px",
+                    }}
+                  >
+                    View
+                  </Button>
+                  <Modal
+                    open={modalOpen}
+                    onClose={handleModal}
+                    sx={{
+                      ".MuiModal-backdrop": {
+                        bgcolor: "transparent",
+                      },
+                      backdropFilter: "blur(0.35px)",
+                    }}
+                    key={_id}
+                  >
+                    <Box
+                      sx={{
+                        position: "absolute" as "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        width: "80%",
+                        height: "80%",
+                        bgcolor: colors.primary[600],
+                        borderRadius: "15px",
+                        p: "30px 60px 30px 60px",
+                      }}
+                    >
+                      <Box
+                        display={"flex"}
+                        alignItems={"center"}
+                        justifyContent={"space-between"}
+                      >
+                        <ModalHeader transaction={transaction} />
+
+                        <IconButton onClick={handleModal}>
+                          <CancelOutlined fontSize="large" />
+                        </IconButton>
+                      </Box>
+                    </Box>
+                  </Modal>
+                </Box>
+              </Box>
+            );
+          })}
       </Box>
     </Box>
   );
