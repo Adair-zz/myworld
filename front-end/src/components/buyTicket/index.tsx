@@ -431,6 +431,12 @@ const BuyTicket = () => {
               backgroundColor: colors.greenAccent[600],
               width: "35%",
               borderRadius: "15px",
+              "&:hover": {
+                background: colors.greenAccent[700],
+              },
+              "&:action": {
+                backgroundColor: colors.greenAccent[800],
+              },
             }}
           >
             Buy {selectedStock.stock_symbol}

@@ -1,13 +1,5 @@
 import { useState } from "react";
-import {
-  Box,
-  Typography,
-  Button,
-  Modal,
-  Chip,
-  Stack,
-  IconButton,
-} from "@mui/material";
+import { Box, Typography, Button, Modal, IconButton } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { CancelOutlined } from "@mui/icons-material";
 
@@ -15,6 +7,7 @@ import { tokens } from "../../theme";
 import { StockTransactionsType } from "../../utils/interface";
 import TransactionHeader from "./transactionHeader";
 import ModalHeader from "./modalHeader";
+import ModalBody from "./modalBody";
 
 const Transaction = ({
   transactions,
@@ -31,10 +24,10 @@ const Transaction = ({
   };
 
   return (
-    <Box m={"5px 5px 0 5px"} height={"540px"}>
+    <Box m={"5px 0 0 5px"}>
       <TransactionHeader />
 
-      <Box margin={"10px 0 10px 10px"}>
+      <Box margin={"10px 0 0 10px"}>
         {transactions != null &&
           transactions.map((transaction) => {
             const {
@@ -108,6 +101,12 @@ const Transaction = ({
                       width: "20%",
                       height: "60%",
                       borderRadius: "10px",
+                      "&:hover": {
+                        backgroundColor: colors.greenAccent[700],
+                      },
+                      "&:active": {
+                        backgroundColor: colors.greenAccent[800],
+                      },
                     }}
                   >
                     View
@@ -117,7 +116,7 @@ const Transaction = ({
                     onClose={handleModal}
                     sx={{
                       ".MuiModal-backdrop": {
-                        bgcolor: "transparent",
+                        backgroundColor: "transparent",
                       },
                       backdropFilter: "blur(0.35px)",
                     }}
@@ -130,10 +129,10 @@ const Transaction = ({
                         left: "50%",
                         transform: "translate(-50%, -50%)",
                         width: "80%",
-                        height: "80%",
-                        bgcolor: colors.primary[600],
+                        height: "70%",
+                        backgroundColor: colors.primary[500],
                         borderRadius: "15px",
-                        p: "30px 60px 30px 60px",
+                        p: "20px 50px 10px 50px",
                       }}
                     >
                       <Box
@@ -147,6 +146,8 @@ const Transaction = ({
                           <CancelOutlined fontSize="large" />
                         </IconButton>
                       </Box>
+
+                      <ModalBody />
                     </Box>
                   </Modal>
                 </Box>

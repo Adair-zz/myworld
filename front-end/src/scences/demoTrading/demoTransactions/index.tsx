@@ -23,7 +23,7 @@ const DemoTransactions = () => {
   );
 
   return (
-    <Box m={"0 10px 0 10px"}>
+    <Box m={"0 5px 0 10px"}>
       <Box
         display={"flex"}
         justifyContent={"space-between"}
@@ -36,11 +36,13 @@ const DemoTransactions = () => {
           }
           titleVariant={"h2"}
           subtitleVariant={"h5"}
+          isAlign={true}
         />
       </Box>
 
       <Box
-        sx={{ backgroundColor: colors.primary[400], margin: "0 5px 0 0" }}
+        height={"550px"}
+        sx={{ backgroundColor: colors.primary[400] }}
         overflow={"auto"}
       >
         <Transaction transactions={demoTransactions} />

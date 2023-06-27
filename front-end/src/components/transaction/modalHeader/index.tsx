@@ -13,7 +13,12 @@ const ModalHeader = ({
   const colors = tokens(theme.palette.mode);
 
   return (
-    <Stack direction={"row"} alignItems={"center"} spacing={2}>
+    <Stack
+      direction={"row"}
+      alignItems={"center"}
+      spacing={2}
+      p={"10px 0 10px 10px"}
+    >
       <Typography variant="h2">{transaction.stock_symbol}</Typography>
       <Chip
         label={`${transaction.transaction_type}`}
@@ -26,8 +31,10 @@ const ModalHeader = ({
         }}
         size={"small"}
       />
-      <Typography>{transaction.date}</Typography>
-      <Typography>{transaction.time}</Typography>
+      <Stack>
+        <Typography>{transaction.date}</Typography>
+        <Typography>{transaction.time}</Typography>
+      </Stack>
     </Stack>
   );
 };

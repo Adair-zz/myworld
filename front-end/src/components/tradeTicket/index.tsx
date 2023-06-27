@@ -49,6 +49,12 @@ const TradeTicket = () => {
             sx={{
               width: "50%",
               backgroundColor: colors.greenAccent[700],
+              "&:hover": {
+                backgroundColor: colors.greenAccent[800],
+              },
+              "&:action": {
+                backgroundColor: colors.greenAccent[900],
+              },
             }}
             onClick={() => dispatch(statusChange("buy"))}
             size={"small"}
@@ -57,7 +63,16 @@ const TradeTicket = () => {
           </Button>
           <Button
             variant="contained"
-            sx={{ width: "50%", backgroundColor: colors.redAccent[700] }}
+            sx={{
+              width: "50%",
+              backgroundColor: colors.redAccent[700],
+              "&:hover": {
+                backgroundColor: colors.redAccent[800],
+              },
+              "&:action": {
+                backgroundColor: colors.redAccent[900],
+              },
+            }}
             onClick={() => dispatch(statusChange("sell"))}
             size={"small"}
           >
@@ -177,6 +192,12 @@ const TradeTicket = () => {
                 backgroundColor: colors.redAccent[600],
                 width: "35%",
                 borderRadius: "15px",
+                "&:hover": {
+                  backgroundColor: colors.redAccent[700],
+                },
+                "&:action": {
+                  backgroundColor: colors.redAccent[800],
+                },
               }}
             >
               Sell {selectedstock.stock_symbol}
