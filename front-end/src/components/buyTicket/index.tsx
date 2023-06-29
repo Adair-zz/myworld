@@ -6,10 +6,8 @@ import {
   Typography,
   Autocomplete,
   TextField,
-  Stack,
-  Slider,
 } from "@mui/material";
-import { useTheme, styled } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 
 import { tokens } from "../../theme";
 import { AppDispatch, RootState } from "../../store/store";
@@ -18,11 +16,6 @@ import {
   getCompanyNameInfo,
   getStockSymbolInfo,
   submitBuyTicket,
-  setStockValue,
-  setQuantity,
-  setTotalAmount,
-  setTpPrice,
-  setSlPrice,
 } from "../../store/stockSelectSlice";
 import { getCurrentDate, getCurrentTime } from "../../utils/dateTime";
 
@@ -42,52 +35,9 @@ const optionsProcess = (stockMarket: StockMarketType[]) => {
   return { stockMarketOptions, stockCompanyNameOptions, stockSymbolOptions };
 };
 
-const quantityMarks = [
-  {
-    value: 0,
-  },
-  {
-    value: 25,
-  },
-  {
-    value: 50,
-  },
-  {
-    value: 75,
-  },
-  {
-    value: 100,
-  },
-];
-
-const triggerMarks = [
-  {
-    value: 0,
-  },
-  {
-    value: 5,
-  },
-  {
-    value: 10,
-  },
-  {
-    value: 15,
-  },
-  {
-    value: 20,
-  },
-];
-
-const valueLabelFormat = (value: number) => {
-  return `${value}%`;
-};
-
 const BuyTicket = () => {
   const theme = useTheme();
   const dispatch = useDispatch<AppDispatch>();
-
-  const [tpPercentage, setTpPercentage] = useState<number>(0);
-  const [slPercentage, setSlPercentage] = useState<number>(0);
 
   const colors = tokens(theme.palette.mode);
   const stockMarket = useSelector((state: RootState) => state.stockMarket);
@@ -114,20 +64,6 @@ const BuyTicket = () => {
     }
   };
 
-  const handleTpPercentageChange = (
-    _: Event,
-    newValue: number | number[]
-  ): void => {
-    setTpPercentage(newValue as number);
-  };
-
-  const handleSlPercentageChange = (
-    _: Event,
-    newValue: number | number[]
-  ): void => {
-    setSlPercentage(newValue as number);
-  };
-
   const handleBuyTicket = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = {
@@ -152,31 +88,45 @@ const BuyTicket = () => {
     dispatch(submitBuyTicket(data));
   };
 
-  const StyledBox = styled(Box)({
-    color: colors.grey[100],
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    margin: "0 0 15px 0",
-    gap: "10%",
+  const [formData, setFormData] = useState<{ [key: string]: any }>({
+    market: "",
+    company_name: "",
+    stock_symbol: "",
+    transaction_type: "buy",
+    stock_value: "",
+    quantity: "",
+    brokerage_fee: "",
+    total_amount: "",
+    tp_price: "",
+    sl_price: "",
+    date: "",
+    time: "",
   });
 
-  const StyledSlider = styled(Slider)({
-    color: colors.grey[400],
-    "& .MuiSlider-valueLabel": {
-      top: 45,
-      backgroundColor: "transparent",
-      border: "none",
-      "&::before": {
-        display: "none",
-      },
-    },
-  });
+  console.log(formData);
+
+  const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
+    const name = event.target.name;
+    const newValue = event.target.value;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: newValue,
+    }));
+  };
 
   return (
     <Box m={"20px 5px 0 5px"}>
       <form onSubmit={handleBuyTicket}>
-        <StyledBox>
+        <Box
+          sx={{
+            color: colors.grey[100],
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            margin: "0 0 15px 0",
+            gap: "10%",
+          }}
+        >
           <Autocomplete
             value={selectedStock.market}
             options={stockMarketOptions}
@@ -192,6 +142,9 @@ const BuyTicket = () => {
             sx={{
               width: "40%",
               ".Mui-focused": {
+                color: colors.grey[100],
+              },
+              ".MuiFormLabel-root": {
                 color: colors.grey[100],
               },
             }}
@@ -221,11 +174,23 @@ const BuyTicket = () => {
               ".Mui-focused": {
                 color: colors.grey[100],
               },
+              ".MuiFormLabel-root": {
+                color: colors.grey[100],
+              },
             }}
           />
-        </StyledBox>
+        </Box>
 
-        <StyledBox>
+        <Box
+          sx={{
+            color: colors.grey[100],
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            margin: "0 0 15px 0",
+            gap: "10%",
+          }}
+        >
           <Autocomplete
             value={selectedStock.company_name}
             options={stockCompanyNameOptions}
@@ -250,22 +215,20 @@ const BuyTicket = () => {
               ".Mui-focused": {
                 color: colors.grey[100],
               },
+              ".MuiFormLabel-root": {
+                color: colors.grey[100],
+              },
             }}
           />
+
           <TextField
-            value={selectedStock.stock_value}
-            onChange={(
-              event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-            ) => {
-              const newStockValue = isNaN(parseFloat(event.target.value))
-                ? undefined
-                : parseFloat(event.target.value);
-              dispatch(setStockValue(newStockValue));
-            }}
-            type="number"
+            value={formData.stock_value}
             label="Stock Value"
+            name="stock_value"
+            type="number"
             variant="standard"
             required
+            onChange={handleInput}
             sx={{
               width: "25%",
               ".Mui-focused": {
@@ -274,149 +237,124 @@ const BuyTicket = () => {
               ".MuiTextField-root": {
                 color: colors.grey[100],
               },
+              ".MuiFormLabel-root": {
+                color: colors.grey[100],
+              },
             }}
           />
-        </StyledBox>
+        </Box>
 
-        <StyledBox>
-          <Stack gap={"10px"} sx={{ width: "40%" }}>
-            <TextField
-              value={selectedStock.quantity}
-              onChange={(
-                event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => {
-                const newquantity = isNaN(parseFloat(event.target.value))
-                  ? undefined
-                  : parseFloat(event.target.value);
-                dispatch(setQuantity(newquantity));
-              }}
-              type="number"
-              label="quantity"
-              variant="standard"
-              required
-              sx={{
-                ".Mui-focused": {
-                  color: colors.grey[100],
-                },
-              }}
-            />
-            <StyledSlider
-              value={tpPercentage}
-              onChange={handleTpPercentageChange}
-              valueLabelFormat={valueLabelFormat}
-              step={1}
-              marks={quantityMarks}
-              min={0}
-              max={100}
-              valueLabelDisplay="on"
-            />
-          </Stack>
+        <Box
+          sx={{
+            color: colors.grey[100],
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            margin: "0 0 15px 0",
+            gap: "10%",
+          }}
+        >
+          <TextField
+            value={formData.quantity}
+            label="Quantity"
+            name="quantity"
+            type="number"
+            variant="standard"
+            required
+            onChange={handleInput}
+            sx={{
+              width: "40%",
+              ".Mui-focused": {
+                color: colors.grey[100],
+              },
+              ".MuiFormLabel-root": {
+                color: colors.grey[100],
+              },
+            }}
+          />
 
-          <Stack gap={"10px"} sx={{ width: "40%" }}>
-            <TextField
-              value={selectedStock.total_amount}
-              onChange={(
-                event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => {
-                const newTotalAmount = isNaN(parseFloat(event.target.value))
-                  ? undefined
-                  : parseFloat(event.target.value);
-                dispatch(setTotalAmount(newTotalAmount));
-              }}
-              type="number"
-              label="Total Amount"
-              variant="standard"
-              required
-              sx={{
-                ".Mui-focused": {
-                  color: colors.grey[100],
-                },
-              }}
-            />
-            <StyledSlider
-              value={tpPercentage}
-              onChange={handleTpPercentageChange}
-              valueLabelFormat={valueLabelFormat}
-              step={1}
-              marks={quantityMarks}
-              min={0}
-              max={100}
-              valueLabelDisplay="on"
-            />
-          </Stack>
-        </StyledBox>
+          <TextField
+            value={formData.total_amount}
+            label="Total Amount"
+            name="total_amount"
+            type="number"
+            variant="standard"
+            required
+            onChange={handleInput}
+            sx={{
+              width: "40%",
+              ".Mui-focused": {
+                color: colors.grey[100],
+              },
+              ".MuiFormLabel-root": {
+                color: colors.grey[100],
+              },
+            }}
+          />
+        </Box>
 
-        <StyledBox sx={{ margin: "30px 0 15px 0" }} color={colors.grey[300]}>
+        <Box
+          sx={{
+            color: colors.grey[300],
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            margin: "0 0 15px 0",
+            gap: "10%",
+          }}
+        >
           <Typography width={"40%"}>Available: your balance</Typography>
           <Typography width={"40%"}>Max Buy: your balance</Typography>
-        </StyledBox>
+        </Box>
 
-        <StyledBox>
-          <Stack gap={"10px"} sx={{ width: "40%" }}>
-            <TextField
-              value={selectedStock.tp_price}
-              onChange={(
-                event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => {
-                const newTpPrice = isNaN(parseFloat(event.target.value))
-                  ? undefined
-                  : parseFloat(event.target.value);
-                dispatch(setTpPrice(newTpPrice));
-              }}
-              type="number"
-              label="TP Trigger Price"
-              variant="standard"
-              required
-              sx={{
-                ".Mui-focused": {
-                  color: colors.grey[100],
-                },
-              }}
-            />
+        <Box
+          sx={{
+            color: colors.grey[100],
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            margin: "0 0 15px 0",
+            gap: "10%",
+          }}
+        >
+          <TextField
+            value={formData.tp_price}
+            label="TP Trigger Price"
+            name="tp_price"
+            type="number"
+            variant="standard"
+            required
+            onChange={handleInput}
+            sx={{
+              width: "40%",
+              ".Mui-focused": {
+                color: colors.grey[100],
+              },
+              ".MuiFormLabel-root": {
+                color: colors.grey[100],
+              },
+            }}
+          />
 
-            <StyledSlider
-              value={tpPercentage}
-              onChange={handleTpPercentageChange}
-              valueLabelFormat={valueLabelFormat}
-              step={1}
-              marks={triggerMarks}
-              min={0}
-              max={20}
-              valueLabelDisplay="on"
-            />
-          </Stack>
-          <Stack gap={"10px"} sx={{ width: "40%" }}>
-            <TextField
-              value={selectedStock.sl_price}
-              onChange={(
-                event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-              ) => {
-                const newSlPrice = isNaN(parseFloat(event.target.value))
-                  ? undefined
-                  : parseFloat(event.target.value);
-                dispatch(setSlPrice(newSlPrice));
-              }}
-              label="SL Trigger Price"
-              variant="standard"
-              required
-              sx={{
-                ".Mui-focused": {
-                  color: colors.grey[100],
-                },
-              }}
-            />
-            <StyledSlider
-              value={slPercentage}
-              onChange={handleSlPercentageChange}
-              valueLabelFormat={valueLabelFormat}
-              step={1}
-              marks={triggerMarks}
-              min={0}
-              max={10}
-              valueLabelDisplay="on"
-            />
-          </Stack>
-        </StyledBox>
+          <TextField
+            value={formData.sl_price}
+            label="SL Trigger Price"
+            name="sl_price"
+            type="number"
+            variant="standard"
+            required
+            onChange={handleInput}
+            sx={{
+              width: "40%",
+              ".Mui-focused": {
+                color: colors.grey[100],
+              },
+              ".MuiFormLabel-root": {
+                color: colors.grey[100],
+              },
+            }}
+          />
+        </Box>
 
         <Box
           display={"flex"}

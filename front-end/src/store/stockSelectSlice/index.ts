@@ -56,12 +56,10 @@ const stockSelectSlice = createSlice({
         state: StockTransactionsBaseType,
         action: PayloadAction<SelectedStockBaseType>
       ) {
-        const { transaction_type, market, company_name, stock_symbol } =
-          action.payload;
-        state.transaction_type = transaction_type;
-        state.market = market;
-        state.company_name = company_name;
-        state.stock_symbol = stock_symbol;
+        state.transaction_type = action.payload.transaction_type;
+        state.market = action.payload.market;
+        state.company_name = action.payload.company_name;
+        state.stock_symbol = action.payload.stock_symbol;
       },
       prepare(selectedStock: SelectedStockBaseType) {
         return {
@@ -78,79 +76,6 @@ const stockSelectSlice = createSlice({
           payload: transaction_type,
         };
       },
-    },
-    setStockValue: {
-      reducer(
-        state: StockTransactionsBaseType,
-        action: PayloadAction<number | undefined>
-      ) {
-        state.stock_value = action.payload;
-      },
-      prepare(stockValue: number | undefined) {
-        return {
-          payload: stockValue,
-        };
-      },
-    },
-    setQuantity: {
-      reducer(
-        state: StockTransactionsBaseType,
-        action: PayloadAction<number | undefined>
-      ) {
-        state.quantity = action.payload;
-      },
-      prepare(quantity: number | undefined) {
-        return {
-          payload: quantity,
-        };
-      },
-    },
-    setTotalAmount: {
-      reducer(
-        state: StockTransactionsBaseType,
-        action: PayloadAction<number | undefined>
-      ) {
-        state.total_amount = action.payload;
-      },
-      prepare(total_amount: number | undefined) {
-        return {
-          payload: total_amount,
-        };
-      },
-    },
-    setTpPrice: {
-      reducer(
-        state: StockTransactionsBaseType,
-        action: PayloadAction<number | undefined>
-      ) {
-        state.tp_price = action.payload;
-      },
-      prepare(tpPrice: number | undefined) {
-        return {
-          payload: tpPrice,
-        };
-      },
-    },
-    setSlPrice: {
-      reducer(
-        state: StockTransactionsBaseType,
-        action: PayloadAction<number | undefined>
-      ) {
-        state.sl_price = action.payload;
-      },
-      prepare(slPrice: number | undefined) {
-        return {
-          payload: slPrice,
-        };
-      },
-    },
-    resetSelectedStock: (state: StockTransactionsBaseType) => {
-      state.stock_value = undefined;
-      state.quantity = undefined;
-      state.brokerage_fee = undefined;
-      state.total_amount = undefined;
-      state.tp_price = undefined;
-      state.sl_price = undefined;
     },
   },
   extraReducers(builder) {
@@ -187,13 +112,5 @@ const stockSelectSlice = createSlice({
   },
 });
 
-export const {
-  stockSelect,
-  statusChange,
-  setStockValue,
-  setQuantity,
-  setTotalAmount,
-  setTpPrice,
-  setSlPrice,
-} = stockSelectSlice.actions;
+export const { stockSelect, statusChange } = stockSelectSlice.actions;
 export default stockSelectSlice.reducer;

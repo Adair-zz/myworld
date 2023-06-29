@@ -113,7 +113,7 @@ const Transaction = ({
                   </Button>
                   <Modal
                     open={modalOpen}
-                    onClose={handleModal}
+                    onClose={() => handleModal()}
                     sx={{
                       ".MuiModal-backdrop": {
                         backgroundColor: "transparent",
@@ -142,7 +142,7 @@ const Transaction = ({
                       >
                         <ModalHeader transaction={transaction} />
 
-                        <IconButton onClick={handleModal}>
+                        <IconButton onClick={() => handleModal()}>
                           <CancelOutlined fontSize="large" />
                         </IconButton>
                       </Box>

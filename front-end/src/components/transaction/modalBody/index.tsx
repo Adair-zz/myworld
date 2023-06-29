@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
 import {
   Box,
   Card,
@@ -7,20 +7,27 @@ import {
   CardMedia,
   Typography,
   Modal,
+  TextField,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
 import { tokens } from "../../../theme";
 import TestImage from "../../../test.png";
+
 const ModalBody = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [str, setStr] = useState<string>("");
+  console.log(str);
 
   const handleModal = () => {
     setModalOpen(!modalOpen);
   };
+
+  const notes: string =
+    "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Rerum magnam, magni facere corrupti voluptates sapiente rem eius sed sunt similique quaerat culpa amet odit, dignissimos, maxime voluptate! In, quam ipsa!";
 
   return (
     <Box p={"20px 20px 10px 10px"}>
@@ -62,29 +69,6 @@ const ModalBody = () => {
               onClick={handleModal}
             />
           </Card>
-          {/* <Box
-            display={"flex"}
-            alignItems={"center"}
-            justifyContent={"center"}
-            sx={{
-              position: "absolute" as "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "80%",
-              height: "80%",
-              bgcolor: colors.primary[500],
-              borderRadius: "15px",
-              p: "20px 50px 10px 50px",
-              m: "0 auto",
-            }}
-          >
-            <img
-              src="https://picsum.photos/700/450.jpg"
-              alt={"temp"}
-              onClick={handleModal}
-            />
-          </Box> */}
         </Modal>
         <Box
           sx={{
@@ -102,12 +86,30 @@ const ModalBody = () => {
             }}
           />
           <CardContent>
-            <Typography>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Rerum
-              magnam, magni facere corrupti voluptates sapiente rem eius sed
-              sunt similique quaerat culpa amet odit, dignissimos, maxime
-              voluptate! In, quam ipsa!
-            </Typography>
+            {notes !== undefined ? (
+              <TextField
+                value={str}
+                multiline
+                rows={3}
+                label="Enter the reason why you buy this stock"
+                sx={{
+                  width: "350px",
+                  ".Mui-focused": {
+                    color: colors.grey[100],
+                  },
+                  ".MuiFormLabel-root": {
+                    color: colors.grey[100],
+                  },
+                }}
+                onChange={(
+                  event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+                ) => {
+                  setStr(event.target.value);
+                }}
+              />
+            ) : (
+              <Typography>{notes}</Typography>
+            )}
           </CardContent>
         </Box>
       </Card>
