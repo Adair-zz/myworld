@@ -73,9 +73,7 @@ const BuyTicket = () => {
       transaction_type: formData.transaction_type,
       stock_value: parseFloat(formData.stock_value),
       quantity: parseFloat(formData.quantity),
-      total_amount:
-        parseFloat(formData.stock_value) * parseFloat(formData.quantity) +
-        parseFloat(formData.stock_value) * parseFloat(formData.brokerage_fee),
+      total_amount: parseFloat(formData.total_amount),
       tp_price: parseFloat(formData.tp_price),
       sl_price: parseFloat(formData.sl_price),
       brokerage_fee: parseFloat(formData.brokerage_fee),
@@ -109,8 +107,6 @@ const BuyTicket = () => {
     time: "",
   });
 
-  console.log(formData);
-
   const handleInput = (event: ChangeEvent<HTMLInputElement>) => {
     const name = event.target.name;
     const newValue = event.target.value;
@@ -118,6 +114,34 @@ const BuyTicket = () => {
       ...prevState,
       [name]: newValue,
     }));
+    console.log(formData.quantity);
+
+    if (
+      name === "stock_value" ||
+      name === "quantity" ||
+      name === "brokerage_fee"
+    ) {
+      const stockValue = parseFloat(
+        name === "stock_value" ? newValue : formData.stock_value
+      );
+      const quantity = parseFloat(
+        name === "quantity" ? newValue : formData.quantity
+      );
+      const fee = parseFloat(
+        name === "brokerage_fee" ? newValue : formData.brokerage_fee
+      );
+
+      if (!isNaN(stockValue) && !isNaN(quantity) && !isNaN(fee)) {
+        console.log("value", stockValue);
+        console.log("quan", quantity);
+        console.log("fee", fee);
+        const totalAmount = stockValue * quantity * (1 + fee / 100);
+        setFormData((prevState) => ({
+          ...prevState,
+          total_amount: totalAmount.toString(),
+        }));
+      }
+    }
   };
 
   return (
@@ -194,7 +218,6 @@ const BuyTicket = () => {
             justifyContent: "center",
             alignItems: "center",
             margin: "0 0 15px 0",
-            gap: "10%",
           }}
         >
           <Autocomplete
@@ -217,7 +240,7 @@ const BuyTicket = () => {
             )}
             aria-required
             sx={{
-              width: "55%",
+              width: "90%",
               ".Mui-focused": {
                 color: colors.grey[100],
               },
@@ -226,7 +249,36 @@ const BuyTicket = () => {
               },
             }}
           />
+        </Box>
 
+        <Box
+          sx={{
+            color: colors.grey[100],
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            margin: "0 0 15px 0",
+            gap: "10%",
+          }}
+        >
+          <TextField
+            value={formData.stock_value}
+            label="Stock Value"
+            name="stock_value"
+            type="number"
+            variant="standard"
+            required
+            onChange={handleInput}
+            sx={{
+              width: "40%",
+              ".Mui-focused": {
+                color: colors.grey[100],
+              },
+              ".MuiFormLabel-root": {
+                color: colors.grey[100],
+              },
+            }}
+          />
           <TextField
             value={formData.brokerage_fee}
             label="Fee"
@@ -236,7 +288,7 @@ const BuyTicket = () => {
             required
             onChange={handleInput}
             sx={{
-              width: "25%",
+              width: "40%",
               ".Mui-focused": {
                 color: colors.grey[100],
               },
@@ -261,9 +313,9 @@ const BuyTicket = () => {
           }}
         >
           <TextField
-            value={formData.stock_value}
-            label="Stock_value"
-            name="stock_value"
+            value={formData.quantity}
+            label="Quantity"
+            name="quantity"
             type="number"
             variant="standard"
             required
@@ -280,13 +332,12 @@ const BuyTicket = () => {
           />
 
           <TextField
-            value={formData.quantity}
-            label="Quantity"
-            name="quantity"
+            value={formData.total_amount}
+            label="Total Amount"
+            name="total_amount"
             type="number"
             variant="standard"
             required
-            onChange={handleInput}
             sx={{
               width: "40%",
               ".Mui-focused": {
@@ -309,8 +360,8 @@ const BuyTicket = () => {
             gap: "10%",
           }}
         >
-          <Typography width={"40%"}>Available: your balance</Typography>
           <Typography width={"40%"}>Max Buy: your balance</Typography>
+          <Typography width={"40%"}>Available: your balance</Typography>
         </Box>
 
         <Box
