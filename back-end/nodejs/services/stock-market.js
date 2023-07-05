@@ -6,7 +6,7 @@ const fetchStockMarket = async (req, res) => {
     const stockMarket = await StockMarket.find();
     res.status(200).json(stockMarket);
   } catch (error) {
-    res.status(500).json({ error: error });
+    res.status(500).json({ msg: error });
   }
 };
 
@@ -16,7 +16,7 @@ const getCompanyNameInfo = async (req, res) => {
     const stockInfo = await StockMarket.find({ company_name: company_name });
     res.status(200).json(stockInfo);
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({ msg: error });
   }
 };
 
@@ -27,7 +27,7 @@ const getStockSymbolInfo = async (req, res) => {
     const stockInfo = await StockMarket.find({ stock_symbol: stock_symbol });
     res.status(200).json(stockInfo);
   } catch (error) {
-    res.status(500).json({ error: error });
+    res.status(500).json({ msg: error });
   }
 };
 

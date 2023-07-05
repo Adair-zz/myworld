@@ -66,6 +66,13 @@ const demoTransactionsSchema = new Schema(
       type: String,
       required: true,
     },
+    image: {
+      data: { type: Buffer },
+      contentType: { type: String },
+    },
+    notes: {
+      type: String,
+    },
   },
   {
     collection: "demo_transactions",
@@ -117,6 +124,30 @@ const demoHoldingsSchema = new Schema(
   }
 );
 
+let transactioNotesConnection = null;
+let transactionNotesModel = null;
+
+const transactionNotesSchema = new Schema(
+  {
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
+    image: {
+      data: { type: Buffer, required: true },
+      contentType: { type: String, required: true },
+    },
+    notes: {
+      type: String,
+      required: true,
+    },
+  },
+  {
+    collection: "transaction-notes",
+    versionKey: false,
+  }
+);
+
 module.exports = {
   getDemoTransactionsModel: () => {
     if (demoTransactionsConnection === null) {
@@ -143,5 +174,18 @@ module.exports = {
       );
     }
     return demoHoldingsModel;
+  },
+  getTransactionNotesModel: () => {
+    if (transactioNotesConnection == null) {
+      transactioNotesConnection = mongoose.createConnection(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
+      transactionNotesModel = transactioNotesConnection.model(
+        "TransactionNotesModel",
+        transactionNotesSchema
+      );
+    }
+    return transactionNotesModel;
   },
 };

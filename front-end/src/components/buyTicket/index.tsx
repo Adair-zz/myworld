@@ -15,8 +15,8 @@ import { StockMarketType } from "../../utils/interface";
 import {
   getCompanyNameInfo,
   getStockSymbolInfo,
-  submitBuyTicket,
 } from "../../store/stockSelectSlice";
+import { placeBuyOrder } from "../../utils/demoTradingController";
 import { getCurrentDate, getCurrentTime } from "../../utils/dateTime";
 
 const optionsProcess = (stockMarket: StockMarketType[]) => {
@@ -64,28 +64,34 @@ const BuyTicket = () => {
     }
   };
 
-  const handleBuyTicket = (event: FormEvent<HTMLFormElement>) => {
+  const handleBuyOrder = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = {
+    const buyOrderInfo = {
       market: selectedStock.market,
       company_name: selectedStock.company_name,
       stock_symbol: selectedStock.stock_symbol,
-      transaction_type: "buy",
-      stock_value: selectedStock.stock_value,
-      quantity: selectedStock.quantity,
+      transaction_type: formData.transaction_type,
+      stock_value: parseFloat(formData.stock_value),
+      quantity: parseFloat(formData.quantity),
       total_amount:
-        selectedStock.total_amount !== undefined &&
-        selectedStock.brokerage_fee !== undefined
-          ? selectedStock.total_amount + selectedStock.brokerage_fee
-          : undefined,
-      tp_price: selectedStock.tp_price,
-      sl_price: selectedStock.sl_price,
-      brokerage_fee: selectedStock.brokerage_fee,
+        parseFloat(formData.stock_value) * parseFloat(formData.quantity) +
+        parseFloat(formData.stock_value) * parseFloat(formData.brokerage_fee),
+      tp_price: parseFloat(formData.tp_price),
+      sl_price: parseFloat(formData.sl_price),
+      brokerage_fee: parseFloat(formData.brokerage_fee),
       date: getCurrentDate(),
       time: getCurrentTime(),
     };
 
-    dispatch(submitBuyTicket(data));
+    try {
+      const res = await placeBuyOrder(buyOrderInfo);
+      console.log(res);
+      if (!res?.status) {
+        console.log("error");
+      }
+    } catch (e: any) {
+      console.log("failed, " + e.message);
+    }
   };
 
   const [formData, setFormData] = useState<{ [key: string]: any }>({
@@ -116,7 +122,7 @@ const BuyTicket = () => {
 
   return (
     <Box m={"20px 5px 0 5px"}>
-      <form onSubmit={handleBuyTicket}>
+      <form onSubmit={handleBuyOrder}>
         <Box
           sx={{
             color: colors.grey[100],
@@ -222,9 +228,9 @@ const BuyTicket = () => {
           />
 
           <TextField
-            value={formData.stock_value}
-            label="Stock Value"
-            name="stock_value"
+            value={formData.brokerage_fee}
+            label="Fee"
+            name="brokerage_fee"
             type="number"
             variant="standard"
             required
@@ -255,9 +261,9 @@ const BuyTicket = () => {
           }}
         >
           <TextField
-            value={formData.quantity}
-            label="Quantity"
-            name="quantity"
+            value={formData.stock_value}
+            label="Stock_value"
+            name="stock_value"
             type="number"
             variant="standard"
             required
@@ -274,9 +280,9 @@ const BuyTicket = () => {
           />
 
           <TextField
-            value={formData.total_amount}
-            label="Total Amount"
-            name="total_amount"
+            value={formData.quantity}
+            label="Quantity"
+            name="quantity"
             type="number"
             variant="standard"
             required
