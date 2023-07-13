@@ -80,10 +80,25 @@ const BuyTicket = () => {
       date: getCurrentDate(),
       time: getCurrentTime(),
     };
+    // const formDataToSubmit: { [key: string]: any } = new FormData();
+    // formDataToSubmit.append("market", selectedStock.market);
+    // formDataToSubmit.append("company_name", selectedStock.company_name);
+    // formDataToSubmit.append("stock_symbol", selectedStock.stock_symbol);
+    // formDataToSubmit.append("transaction_type", formData.transaction_type);
+    // formDataToSubmit.append("stock_value", parseFloat(formData.stock_value));
+    // formDataToSubmit.append("quantity", parseFloat(formData.quantity));
+    // formDataToSubmit.append("total_amount", parseFloat(formData.total_amount));
+    // formDataToSubmit.append("tp_price", parseFloat(formData.tp_price));
+    // formDataToSubmit.append("sl_price", parseFloat(formData.sl_price));
+    // formDataToSubmit.append(
+    //   "brokerage_fee",
+    //   parseFloat(formData.brokerage_fee)
+    // );
+    // formDataToSubmit.append("date", getCurrentDate());
+    // formDataToSubmit.append("time", getCurrentTime());
 
     try {
       const res = await placeBuyOrder(buyOrderInfo);
-      console.log(res);
       if (!res?.status) {
         console.log("error");
       }
@@ -114,7 +129,6 @@ const BuyTicket = () => {
       ...prevState,
       [name]: newValue,
     }));
-    console.log(formData.quantity);
 
     if (
       name === "stock_value" ||
@@ -132,9 +146,6 @@ const BuyTicket = () => {
       );
 
       if (!isNaN(stockValue) && !isNaN(quantity) && !isNaN(fee)) {
-        console.log("value", stockValue);
-        console.log("quan", quantity);
-        console.log("fee", fee);
         const totalAmount = stockValue * quantity * (1 + fee / 100);
         setFormData((prevState) => ({
           ...prevState,

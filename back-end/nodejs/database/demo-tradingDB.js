@@ -143,7 +143,7 @@ const transactionNotesSchema = new Schema(
     },
   },
   {
-    collection: "transaction-notes",
+    collection: "transaction_notes",
     versionKey: false,
   }
 );

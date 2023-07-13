@@ -1,13 +1,10 @@
-import { useState } from "react";
-import { Box, Typography, Button, Modal, IconButton } from "@mui/material";
+import { Link } from "react-router-dom";
+import { Box, Typography, Button } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { CancelOutlined } from "@mui/icons-material";
 
 import { tokens } from "../../theme";
 import { StockTransactionsType } from "../../utils/interface";
 import TransactionHeader from "./transactionHeader";
-import ModalHeader from "./modalHeader";
-import ModalBody from "./modalBody";
 
 const Transaction = ({
   transactions,
@@ -16,12 +13,6 @@ const Transaction = ({
 }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-
-  const handleModal = () => {
-    setModalOpen(!modalOpen);
-  };
 
   return (
     <Box m={"5px 0 0 5px"}>
@@ -93,63 +84,28 @@ const Transaction = ({
                   >
                     {_id}
                   </Typography>
-                  <Button
-                    onClick={handleModal}
-                    variant="contained"
-                    sx={{
-                      bgcolor: colors.greenAccent[600],
-                      width: "20%",
-                      height: "60%",
-                      borderRadius: "10px",
-                      "&:hover": {
-                        backgroundColor: colors.greenAccent[700],
-                      },
-                      "&:active": {
-                        backgroundColor: colors.greenAccent[800],
-                      },
-                    }}
+                  <Link
+                    to={`/demo-trading/demo-transactions/${_id}`}
+                    style={{ textDecoration: "none" }}
                   >
-                    View
-                  </Button>
-                  <Modal
-                    open={modalOpen}
-                    onClose={() => handleModal()}
-                    sx={{
-                      ".MuiModal-backdrop": {
-                        backgroundColor: "transparent",
-                      },
-                      backdropFilter: "blur(0.35px)",
-                    }}
-                    key={_id}
-                  >
-                    <Box
+                    <Button
+                      variant="contained"
                       sx={{
-                        position: "absolute" as "absolute",
-                        top: "50%",
-                        left: "50%",
-                        transform: "translate(-50%, -50%)",
-                        width: "80%",
-                        height: "70%",
-                        backgroundColor: colors.primary[500],
-                        borderRadius: "15px",
-                        p: "20px 50px 10px 50px",
+                        bgcolor: colors.greenAccent[600],
+                        width: "20%",
+                        height: "60%",
+                        borderRadius: "10px",
+                        "&:hover": {
+                          backgroundColor: colors.greenAccent[700],
+                        },
+                        "&:active": {
+                          backgroundColor: colors.greenAccent[800],
+                        },
                       }}
                     >
-                      <Box
-                        display={"flex"}
-                        alignItems={"center"}
-                        justifyContent={"space-between"}
-                      >
-                        <ModalHeader transaction={transaction} />
-
-                        <IconButton onClick={() => handleModal()}>
-                          <CancelOutlined fontSize="large" />
-                        </IconButton>
-                      </Box>
-
-                      <ModalBody />
-                    </Box>
-                  </Modal>
+                      View
+                    </Button>
+                  </Link>
                 </Box>
               </Box>
             );

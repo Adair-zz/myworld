@@ -9,6 +9,7 @@ import StockNews from "./scences/stockNews";
 import Balance from "./scences/balance";
 import DemoTrading from "./scences/demoTrading";
 import DemoTransactions from "./scences/demoTrading/demoTransactions";
+import TransactionView from "./components/transaction/transactionView";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
           {
             path: "demo-transactions",
             element: <DemoTransactions />,
+          },
+          {
+            path: "demo-transactions/:_id",
+            element: <TransactionView />,
           },
         ],
       },

@@ -1,18 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const multer = require("multer");
-var upload = multer({ dest: "uploads/" });
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./uploads");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-var upload = multer({ storage: storage });
 
+const fileUpload = require("./middleware/file-upload");
 const demoTrading = require("./services/demo-trading");
 const stockMarket = require("./services/stock-market");
 const demoTradingDB = require("./database/demo-tradingDB");
@@ -25,8 +15,8 @@ app.use(cors());
 app.get("/demo-holdings", demoTrading.demoHoldings);
 app.post("/placeDemoBuyOrder", demoTrading.placeBuyOrder);
 app.post(
-  "/submitTransactionNotes",
-  upload.single("image"),
+  "/transaction-notes",
+  fileUpload.single("image"),
   demoTrading.addTransactionNotes
 );
 app.get("/demo-transactions", demoTrading.demoTransactions);

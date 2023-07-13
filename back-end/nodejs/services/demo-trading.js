@@ -32,7 +32,7 @@ const placeBuyOrder = async (req, res) => {
     });
 
     await newDemoOrder.save();
-    res.status(200).json({ msg: "Place Buy Order Successfully" });
+    res.status(201).json({ msg: "Place Buy Order Successfully" });
   } catch (error) {
     res.status(500).json({ msg: error });
   }
@@ -40,25 +40,18 @@ const placeBuyOrder = async (req, res) => {
 
 const addTransactionNotes = async (req, res) => {
   try {
-    if (!req.file) {
-      res.status(500).json({ msg: "Image is Invalid" });
-    }
-
-    await DemoTrading.updateOne(
-      { _id: new mongoose.Types.ObjectId(req.body._id) },
-      {
-        $set: {
-          notes: req.body.notes,
-          image: {
-            data: fs.readFileSync(req.file.path),
-            contentType: req.file.mimetype,
-          },
-        },
-      }
-    );
-
+    const newTransactionNotes = new TransactionNotes({
+      _id: new mongoose.Types.ObjectId(req.body._id),
+      notes: req.body.notes,
+      image: {
+        data: fs.readFileSync(req.file.path),
+        contentType: req.file.mimetype,
+      },
+    });
+    await newTransactionNotes.save();
     res.status(201).json({ msg: "Add Transaction Notes Successfully" });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ msg: error });
   }
 };
