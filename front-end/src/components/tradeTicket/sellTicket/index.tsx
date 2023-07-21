@@ -1,90 +1,63 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  Box,
-  Button,
-  Typography,
-  Autocomplete,
-  TextField,
-} from "@mui/material";
+import { useSelector } from "react-redux";
+import { Box, Autocomplete, TextField, Button } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
-import { tokens } from "../../theme";
-import { AppDispatch, RootState } from "../../store/store";
-import { StockMarketType } from "../../utils/typings";
+import { tokens } from "../../../theme";
+import { RootState } from "../../../store/store";
 import {
-  getCompanyNameInfo,
-  getStockSymbolInfo,
-} from "../../store/stockSelectSlice";
-import { getStockMarket } from "../../utils/controller/stockMarketController";
-import { placeBuyOrder } from "../../utils/controller/demoTradingController";
-import { getCurrentDate, getCurrentTime } from "../../utils/dateTime";
+  placeSellOrder,
+  fetchDemoHoldings,
+} from "../../../utils/controller/demoTradingController";
+import { getCurrentDate, getCurrentTime } from "../../../utils/dateTime";
 
-const optionsProcess = (stockMarket: StockMarketType[]) => {
+const sellOptionsProcess = (demoHoldings: { [key: string]: any }[]) => {
   const stockMarketOptions: string[] = [];
   const stockCompanyNameOptions: string[] = [];
   const stockSymbolOptions: string[] = [];
 
-  stockMarket.forEach((stock) => {
-    const { market, company_name, stock_symbol } = stock;
+  demoHoldings.forEach((holding) => {
+    const { market, company_name, stock_symbol } = holding;
     if (!stockMarketOptions.includes(market)) {
       stockMarketOptions.push(market);
     }
     stockCompanyNameOptions.push(company_name);
     stockSymbolOptions.push(stock_symbol);
   });
+
   return { stockMarketOptions, stockCompanyNameOptions, stockSymbolOptions };
 };
 
-const BuyTicket = () => {
+const SellTicket = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const dispatch = useDispatch<AppDispatch>();
 
-  const [stockMarket, setStockMarket] = useState<StockMarketType[]>([]);
+  const selectedStock = useSelector((state: RootState) => state.stockSelect);
+  const [demoHoldings, setDemoHoldings] = useState([]);
+
   useEffect(() => {
-    const fetchStockMarketData = async () => {
-      const response = await getStockMarket();
-      console.log(response.data);
-      setStockMarket(response.data);
+    const fetchDemoHoldingsData = async () => {
+      const response = await fetchDemoHoldings();
+      setDemoHoldings(response.data);
     };
 
-    fetchStockMarketData();
+    fetchDemoHoldingsData();
   }, []);
-  const selectedStock = useSelector((state: RootState) => state.stockSelect);
-  const { stockMarketOptions, stockCompanyNameOptions, stockSymbolOptions } =
-    optionsProcess(stockMarket);
 
-  const handleSelectedStockChange = (
-    _: ChangeEvent<{}>,
-    newValue: string | "" | null,
-    type: string
-  ): void => {
-    if (newValue != null && newValue.length > 1) {
-      switch (type) {
-        case "company_name":
-          dispatch(getCompanyNameInfo(newValue));
-          break;
-        case "stock_symbol":
-          dispatch(getStockSymbolInfo(newValue));
-          break;
-        default:
-          return;
-      }
-    }
-  };
+  const { stockMarketOptions, stockCompanyNameOptions, stockSymbolOptions } =
+    sellOptionsProcess(demoHoldings);
 
   const [formData, setFormData] = useState<{ [key: string]: any }>({
     market: "",
     company_name: "",
     stock_symbol: "",
-    transaction_type: "buy",
+    transaction_type: "sell",
     stock_value: "",
     quantity: "",
     brokerage_fee: "",
     total_amount: "",
-    tp_price: "",
-    sl_price: "",
+    tp_price: "0",
+    sl_price: "0",
     date: "",
     time: "",
   });
@@ -122,9 +95,9 @@ const BuyTicket = () => {
     }
   };
 
-  const handleBuyOrder = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSellOrder = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const buyOrderInfo = {
+    const sellOrderInfo = {
       market: selectedStock.market,
       company_name: selectedStock.company_name,
       stock_symbol: selectedStock.stock_symbol,
@@ -140,7 +113,7 @@ const BuyTicket = () => {
     };
 
     try {
-      const res = await placeBuyOrder(buyOrderInfo);
+      const res = await placeSellOrder(sellOrderInfo);
       if (!res?.status) {
         console.log("error");
       }
@@ -151,108 +124,49 @@ const BuyTicket = () => {
 
   return (
     <Box m={"20px 5px 0 5px"}>
-      <form onSubmit={handleBuyOrder}>
+      <form onSubmit={handleSellOrder}>
         <Box
-          sx={{
-            color: colors.grey[100],
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            margin: "0 0 15px 0",
-            gap: "10%",
-          }}
+          display={"flex"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          gap={"10%"}
+          m={"0 0 15px 0"}
         >
           <Autocomplete
             value={selectedStock.market}
             options={stockMarketOptions}
             filterSelectedOptions
             renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Market"
-                variant="standard"
-                required
-              />
+              <TextField {...params} label="Market" variant="standard" />
             )}
-            sx={{
-              width: "40%",
-              ".Mui-focused": {
-                color: colors.grey[100],
-              },
-              ".MuiFormLabel-root": {
-                color: colors.grey[100],
-              },
-            }}
+            sx={{ width: "40%" }}
           />
 
           <Autocomplete
             value={selectedStock.stock_symbol}
             options={stockSymbolOptions}
             filterSelectedOptions
-            onChange={(
-              event: ChangeEvent<{}>,
-              newValue: string | "" | null
-            ) => {
-              handleSelectedStockChange(event, newValue, "stock_symbol");
-            }}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Symbol"
-                variant="standard"
-                required
-              />
+              <TextField {...params} label="Symbol" variant="standard" />
             )}
-            aria-required
-            sx={{
-              width: "40%",
-              ".Mui-focused": {
-                color: colors.grey[100],
-              },
-              ".MuiFormLabel-root": {
-                color: colors.grey[100],
-              },
-            }}
+            sx={{ width: "40%" }}
           />
         </Box>
 
         <Box
-          sx={{
-            color: colors.grey[100],
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            margin: "0 0 15px 0",
-          }}
+          display={"flex"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          m={"0 0 15px 0"}
         >
           <Autocomplete
             value={selectedStock.company_name}
             options={stockCompanyNameOptions}
             filterSelectedOptions
-            onChange={(
-              event: ChangeEvent<{}>,
-              newValue: string | "" | null
-            ) => {
-              handleSelectedStockChange(event, newValue, "company_name");
-            }}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Company Name"
-                variant="standard"
-                required
-              />
+              <TextField {...params} label="Company Name" variant="standard" />
             )}
-            aria-required
-            sx={{
-              width: "90%",
-              ".Mui-focused": {
-                color: colors.grey[100],
-              },
-              ".MuiFormLabel-root": {
-                color: colors.grey[100],
-              },
-            }}
+            sx={{ width: "90%" }}
           />
         </Box>
 
@@ -356,69 +270,6 @@ const BuyTicket = () => {
         </Box>
 
         <Box
-          sx={{
-            color: colors.grey[300],
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            margin: "0 0 15px 0",
-            gap: "10%",
-          }}
-        >
-          <Typography width={"40%"}>Max Buy: your balance</Typography>
-          <Typography width={"40%"}>Available: your balance</Typography>
-        </Box>
-
-        <Box
-          sx={{
-            color: colors.grey[100],
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            margin: "0 0 15px 0",
-            gap: "10%",
-          }}
-        >
-          <TextField
-            value={formData.tp_price}
-            label="TP Trigger Price"
-            name="tp_price"
-            type="number"
-            variant="standard"
-            required
-            onChange={handleInput}
-            sx={{
-              width: "40%",
-              ".Mui-focused": {
-                color: colors.grey[100],
-              },
-              ".MuiFormLabel-root": {
-                color: colors.grey[100],
-              },
-            }}
-          />
-
-          <TextField
-            value={formData.sl_price}
-            label="SL Trigger Price"
-            name="sl_price"
-            type="number"
-            variant="standard"
-            required
-            onChange={handleInput}
-            sx={{
-              width: "40%",
-              ".Mui-focused": {
-                color: colors.grey[100],
-              },
-              ".MuiFormLabel-root": {
-                color: colors.grey[100],
-              },
-            }}
-          />
-        </Box>
-
-        <Box
           display={"flex"}
           justifyContent={"center"}
           alignItems={"center"}
@@ -428,18 +279,18 @@ const BuyTicket = () => {
             type="submit"
             variant="contained"
             sx={{
-              backgroundColor: colors.greenAccent[600],
+              backgroundColor: colors.redAccent[600],
               width: "35%",
               borderRadius: "15px",
               "&:hover": {
-                background: colors.greenAccent[700],
+                background: colors.redAccent[700],
               },
               "&:action": {
-                backgroundColor: colors.greenAccent[800],
+                backgroundColor: colors.redAccent[800],
               },
             }}
           >
-            Buy {selectedStock.stock_symbol}
+            Sell {selectedStock.stock_symbol}
           </Button>
         </Box>
       </form>
@@ -447,4 +298,4 @@ const BuyTicket = () => {
   );
 };
 
-export default BuyTicket;
+export default SellTicket;

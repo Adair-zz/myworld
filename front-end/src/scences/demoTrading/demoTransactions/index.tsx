@@ -1,26 +1,27 @@
-import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
 import { tokens } from "../../../theme";
-import { RootState, AppDispatch } from "../../../store/store";
-import { fetchDemoTransactions } from "../../../store/stockTransactionsSlice";
 import Header from "../../../components/header";
 import Transaction from "../../../components/transaction";
+
+import { fetchDemoTransactions } from "../../../utils/controller/demoTradingController";
 
 const DemoTransactions = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const dispatch = useDispatch<AppDispatch>();
+
+  const [demoTransactions, setDemoTransactions] = useState([]);
 
   useEffect(() => {
-    dispatch(fetchDemoTransactions());
-  }, []);
+    const fetchDemoTransactionsData = async () => {
+      const response = await fetchDemoTransactions();
+      setDemoTransactions(response.data);
+    };
 
-  const demoTransactions = useSelector(
-    (state: RootState) => state.stockTransactions.demo_transactions
-  );
+    fetchDemoTransactionsData();
+  }, []);
 
   return (
     <Box m={"0 5px 0 10px"}>

@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { tokens } from "../../theme";
 import Header from "../header";
 import { stockSelect } from "../../store/stockSelectSlice";
-import { StockHoldingsType } from "../../utils/interface";
+import { StockHoldingsType } from "../../utils/typings";
 
 const Holding = ({ holdings }: { holdings: StockHoldingsType[] }) => {
   const dispatch = useDispatch();

@@ -3,7 +3,7 @@ import { Box, Typography, Button } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
 import { tokens } from "../../theme";
-import { StockTransactionsType } from "../../utils/interface";
+import { StockTransactionsType } from "../../utils/typings";
 import TransactionHeader from "./transactionHeader";
 
 const Transaction = ({

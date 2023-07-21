@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { StockMarketType } from "../../utils/interface";
+import { StockMarketType } from "../../utils/typings";
 
 const initialState: StockMarketType[] = [
   {

@@ -1,29 +1,31 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 import { Box, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { ReceiptOutlined } from "@mui/icons-material";
 
 import { tokens } from "../../theme";
-import { RootState, AppDispatch } from "../../store/store";
-import { fetchDemoHoldings } from "../../store/stockHoldingsSlice";
+import { fetchDemoHoldings } from "../../utils/controller/demoTradingController";
 import Header from "../../components/header";
 import Holding from "../../components/holdidng";
 import TradeTicket from "../../components/tradeTicket";
 
+import { StockHoldingsType } from "../../utils/typings";
+
 const DemoTrading = () => {
   const theme = useTheme();
-  const dispatch = useDispatch<AppDispatch>();
+  const colors = tokens(theme.palette.mode);
+
+  const [demoHoldings, setDemoHoldings] = useState<StockHoldingsType[]>([]);
 
   useEffect(() => {
-    dispatch(fetchDemoHoldings());
-  }, []);
+    const fetchDemoHoldingsData = async () => {
+      const response = await fetchDemoHoldings();
+      setDemoHoldings(response.data);
+    };
 
-  const colors = tokens(theme.palette.mode);
-  const demoHoldings = useSelector(
-    (state: RootState) => state.stockHoldings.demo_holdings
-  );
+    fetchDemoHoldingsData();
+  }, []);
 
   return (
     <Box m={"0 10px 0 10px"}>

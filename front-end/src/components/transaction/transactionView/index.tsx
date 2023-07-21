@@ -20,7 +20,7 @@ import { useParams } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 
 import { tokens } from "../../../theme";
-import { addTransactionNotes } from "../../../utils/demoTradingController";
+import { addTransactionNotes } from "../../../utils/controller/demoTradingController";
 import TestImage from "../../../test.png";
 
 const TransactionView = () => {

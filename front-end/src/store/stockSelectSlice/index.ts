@@ -2,7 +2,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   SelectedStockBaseType,
   StockTransactionsBaseType,
-} from "../../utils/interface";
+} from "../../utils/typings";
 import axios from "axios";
 
 export const getCompanyNameInfo = createAsyncThunk(
